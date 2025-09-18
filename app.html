@@ -221,7 +221,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- APP STATE & CONSTANTS ---
     let currentUser = localStorage.getItem('ecoTrackUser') || 'Guest';
     let energyChart;
-    const WATTAGE_MAP = { 'Fan': 75, 'Light (LED)': 15, 'Projector': 300, 'AC (1.5 Ton)': 1500, 'Computer': 200, 'Lift': 5000, 'Other': 100 };
+    // Updated Wattage values based on standard figures
+    const WATTAGE_MAP = { 
+        'AC (1.5 Ton)': 1500, 
+        'Light (LED)': 9, 
+        'Fan': 25, 
+        'Projector': 50, 
+        'Lift': 7500, // Representative operational average
+        'Computer': 200, 
+        'Other': 100 
+    };
     const COST_PER_KWH = 8; // in ₹
     const CO2_PER_KWH = 0.82; // in kg
     const LEADERBOARD_DATA = [
@@ -471,3 +480,4 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+
