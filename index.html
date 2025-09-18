@@ -17,7 +17,7 @@
         .reveal {
             opacity: 0;
             transform: translateY(30px);
-            transition: opacity 0.8s ease-out, transform 0.6s ease-out;
+            transition: opacity 0.8s cubic-bezier(0.5, 0, 0, 1), transform 0.6s cubic-bezier(0.5, 0, 0, 1);
         }
         .reveal.visible {
             opacity: 1;
@@ -75,16 +75,18 @@
             </a>
             <div class="flex items-center space-x-2 md:space-x-4 text-sm md:text-base">
                 <a href="#about" class="text-gray-600 hover:text-emerald-500 transition-colors duration-300">About</a>
+                <a href="#connections" class="text-gray-600 hover:text-emerald-500 transition-colors duration-300">Connections</a>
                 <a href="#impact" class="text-gray-600 hover:text-emerald-500 transition-colors duration-300">Impact</a>
                 <a href="#types" class="text-gray-600 hover:text-emerald-500 transition-colors duration-300">Types</a>
                 <a href="#progress" class="text-gray-600 hover:text-emerald-500 transition-colors duration-300">Progress</a>
-                <a href="app.html" class="bg-emerald-500 text-white px-4 py-2 rounded-lg hover:bg-emerald-600 transition-colors duration-300 shadow-lg">Eco Track</a>
+                <a href="app.html" class="bg-emerald-500 text-white px-4 py-2 rounded-lg hover:bg-emerald-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105">Eco Track</a>
             </div>
         </nav>
     </header>
 
     <!-- Hero Section -->
     <section class="bg-gradient-to-br from-emerald-800 to-green-900 h-[90vh] flex items-center justify-center text-center relative overflow-hidden">
+        <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('https://placehold.co/1920x1080/064e3b/10b981?text=Sustainable+Future'); opacity: 0.2;"></div>
         <div class="absolute inset-0 bg-black opacity-50"></div>
         <!-- Decorative SVG shapes -->
         <svg class="absolute bottom-0 left-0 text-white/5" width="300" height="300" viewBox="0 0 200 200" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M165.23 41.5204C147.233 23.9311 122.155 13.7175 95.8115 13.7175C46.1264 13.7175 6.09375 53.7501 6.09375 103.435C6.09375 129.779 16.3074 154.857 33.8967 172.854L165.23 41.5204Z" /></svg>
@@ -107,16 +109,8 @@
     <section id="about" class="py-24 px-6 bg-gray-50">
         <!-- Leaves Animation Container -->
         <div class="absolute top-0 left-0 w-full h-full pointer-events-none z-0">
-            <div class="leaf"></div>
-            <div class="leaf"></div>
-            <div class="leaf"></div>
-            <div class="leaf"></div>
-            <div class="leaf"></div>
-            <div class="leaf"></div>
-            <div class="leaf"></div>
-            <div class="leaf"></div>
-            <div class="leaf"></div>
-            <div class="leaf"></div>
+            <div class="leaf"></div><div class="leaf"></div><div class="leaf"></div><div class="leaf"></div><div class="leaf"></div>
+            <div class="leaf"></div><div class="leaf"></div><div class="leaf"></div><div class="leaf"></div><div class="leaf"></div>
         </div>
 
         <div class="container mx-auto max-w-4xl text-center relative z-10">
@@ -132,23 +126,55 @@
         </div>
     </section>
 
+    <!-- SDG Connections Section -->
+    <section id="connections" class="py-24 px-6 bg-white">
+        <div class="container mx-auto">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-3xl sm:text-4xl font-bold text-emerald-700">One Goal, Many Connections</h2>
+                <p class="text-lg text-gray-600 mt-2 max-w-3xl mx-auto">Achieving SDG 7 is fundamental to the success of many other Sustainable Development Goals.</p>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center reveal">
+                <div class="flex flex-col items-center p-4 rounded-lg transition-transform transform hover:scale-105">
+                    <img src="https://sdgs.un.org/sites/default/files/goals/E_SDG_Icons-01.jpg" alt="SDG 1: No Poverty" class="w-24 h-24 mb-3">
+                    <h3 class="font-semibold text-lg text-gray-700">No Poverty (SDG 1)</h3>
+                    <p class="text-sm text-gray-500">Energy access powers economic opportunities for the poor.</p>
+                </div>
+                <div class="flex flex-col items-center p-4 rounded-lg transition-transform transform hover:scale-105">
+                    <img src="https://sdgs.un.org/sites/default/files/goals/E_SDG_Icons-03.jpg" alt="SDG 3: Good Health and Well-being" class="w-24 h-24 mb-3">
+                    <h3 class="font-semibold text-lg text-gray-700">Good Health (SDG 3)</h3>
+                    <p class="text-sm text-gray-500">Clean energy reduces pollution and powers healthcare facilities.</p>
+                </div>
+                <div class="flex flex-col items-center p-4 rounded-lg transition-transform transform hover:scale-105">
+                    <img src="https://sdgs.un.org/sites/default/files/goals/E_SDG_Icons-11.jpg" alt="SDG 11: Sustainable Cities and Communities" class="w-24 h-24 mb-3">
+                    <h3 class="font-semibold text-lg text-gray-700">Sustainable Cities (SDG 11)</h3>
+                    <p class="text-sm text-gray-500">Powers sustainable transport and urban infrastructure.</p>
+                </div>
+                <div class="flex flex-col items-center p-4 rounded-lg transition-transform transform hover:scale-105">
+                    <img src="https://sdgs.un.org/sites/default/files/goals/E_SDG_Icons-13.jpg" alt="SDG 13: Climate Action" class="w-24 h-24 mb-3">
+                    <h3 class="font-semibold text-lg text-gray-700">Climate Action (SDG 13)</h3>
+                    <p class="text-sm text-gray-500">Shifting to renewables is key to combating climate change.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- The Impact Section -->
-    <section id="impact" class="py-24 px-6 bg-white">
+    <section id="impact" class="py-24 px-6 bg-gray-50">
         <div class="container mx-auto">
             <div class="text-center mb-16 reveal">
                 <h2 class="text-3xl sm:text-4xl font-bold text-emerald-700">Why Clean Energy Matters</h2>
                 <p class="text-lg text-gray-600 mt-2 max-w-2xl mx-auto">Transitioning to clean energy creates a ripple effect of positive change.</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                <div class="bg-gray-50 p-8 rounded-lg shadow-lg reveal" style="transition-delay: 100ms;">
+                <div class="bg-white p-8 rounded-lg shadow-lg reveal transition-all duration-300 hover:shadow-xl hover:-translate-y-2" style="transition-delay: 100ms;">
                     <h3 class="text-2xl font-semibold text-gray-800 mb-3">Environmental Health</h3>
                     <p class="text-gray-600">Reduces air and water pollution, combats climate change by cutting greenhouse gas emissions, and protects biodiversity.</p>
                 </div>
-                <div class="bg-gray-50 p-8 rounded-lg shadow-lg reveal" style="transition-delay: 250ms;">
+                <div class="bg-white p-8 rounded-lg shadow-lg reveal transition-all duration-300 hover:shadow-xl hover:-translate-y-2" style="transition-delay: 250ms;">
                     <h3 class="text-2xl font-semibold text-gray-800 mb-3">Economic Growth</h3>
                     <p class="text-gray-600">Creates green jobs in manufacturing and installation, stimulates innovation, and provides energy security by reducing reliance on imported fuels.</p>
                 </div>
-                <div class="bg-gray-50 p-8 rounded-lg shadow-lg reveal" style="transition-delay: 400ms;">
+                <div class="bg-white p-8 rounded-lg shadow-lg reveal transition-all duration-300 hover:shadow-xl hover:-translate-y-2" style="transition-delay: 400ms;">
                     <h3 class="text-2xl font-semibold text-gray-800 mb-3">Social Well-being</h3>
                     <p class="text-gray-600">Improves public health with cleaner air, enhances energy access for rural communities, and supports education and healthcare services.</p>
                 </div>
@@ -157,49 +183,49 @@
     </section>
 
     <!-- Types of Clean Energy Section -->
-    <section id="types" class="py-24 px-6 bg-gray-50">
+    <section id="types" class="py-24 px-6 bg-white">
         <div class="container mx-auto text-center">
             <div class="reveal">
                 <h2 class="text-3xl sm:text-4xl font-bold text-emerald-700 mb-16">Types of Clean Energy</h2>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                 <!-- Cards for Solar, Wind, Hydro, Geothermal, Biomass -->
-                <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 reveal">
+                <div class="bg-gray-50 p-8 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 reveal">
                     <div class="bg-yellow-400 text-white rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6 shadow-md">
                         <svg class="w-12 h-12" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm-.707 10.607a1 1 0 011.414 0l.707-.707a1 1 0 111.414 1.414l-.707.707a1 1 0 01-1.414 0zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path></svg>
                     </div>
                     <h3 class="text-2xl font-semibold text-gray-800 mb-3">Solar Power</h3>
                     <p class="text-gray-600">Harnessing sunlight via photovoltaic panels, solar is a fast-growing, clean, and abundant source for generating electricity.</p>
                 </div>
-                 <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 reveal" style="transition-delay: 150ms;">
+                 <div class="bg-gray-50 p-8 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 reveal" style="transition-delay: 150ms;">
                     <div class="bg-sky-500 text-white rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6 shadow-md">
                         <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path><path d="M15.29 5.29C16.85 6.85 18 9.35 18 12c0 2.65-1.15 5.15-2.71 6.71" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="stroke-dasharray: 6, 4;"></path><path d="M8.71 5.29C7.15 6.85 6 9.35 6 12c0 2.65 1.15 5.15 2.71 6.71" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="stroke-dasharray: 6, 4;"></path></svg>
                     </div>
                     <h3 class="text-2xl font-semibold text-gray-800 mb-3">Wind Power</h3>
                     <p class="text-gray-600">Wind turbines convert the kinetic energy of wind into electricity. It's a non-polluting and sustainable source of power.</p>
                 </div>
-                <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 reveal" style="transition-delay: 300ms;">
+                <div class="bg-gray-50 p-8 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 reveal" style="transition-delay: 300ms;">
                      <div class="bg-blue-600 text-white rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6 shadow-md">
                         <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path><path d="M3.27 15.65c1.42 1.42 3.27 2.35 5.23 2.35s3.81-.93 5.23-2.35" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="stroke-dasharray: 6, 4;"></path></svg>
                     </div>
                     <h3 class="text-2xl font-semibold text-gray-800 mb-3">Hydropower</h3>
                     <p class="text-gray-600">Hydropower uses the force of flowing water to spin turbines, providing a stable and reliable source of clean electricity.</p>
                 </div>
-                <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 reveal" style="transition-delay: 450ms;">
+                <div class="bg-gray-50 p-8 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 reveal" style="transition-delay: 450ms;">
                      <div class="bg-orange-600 text-white rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6 shadow-md">
                         <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                     </div>
                     <h3 class="text-2xl font-semibold text-gray-800 mb-3">Geothermal</h3>
                     <p class="text-gray-600">This energy source taps into the Earth's internal heat to generate steam, which powers electricity generators.</p>
                 </div>
-                <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 reveal" style="transition-delay: 600ms;">
+                <div class="bg-gray-50 p-8 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 reveal" style="transition-delay: 600ms;">
                      <div class="bg-lime-600 text-white rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6 shadow-md">
                         <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7.014A10.004 10.004 0 0122 12c0 5.523-4.477 10-10 10-2.273 0-4.38-.756-6.071-2.036"></path></svg>
                     </div>
                     <h3 class="text-2xl font-semibold text-gray-800 mb-3">Biomass</h3>
                     <p class="text-gray-600">Biomass energy is generated from organic materials like wood, crops, and waste, turning them into a renewable power source.</p>
                 </div>
-                 <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 reveal" style="transition-delay: 750ms;">
+                 <div class="bg-gray-50 p-8 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 reveal" style="transition-delay: 750ms;">
                      <div class="bg-indigo-500 text-white rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6 shadow-md">
                         <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16M10 4l-6 8h16l-6-8z"></path></svg>
                     </div>
@@ -211,22 +237,22 @@
     </section>
 
     <!-- India's Progress Section -->
-    <section id="progress" class="py-24 px-6 bg-white">
+    <section id="progress" class="py-24 px-6 bg-gray-50">
         <div class="container mx-auto">
             <div class="text-center mb-16 reveal">
                 <h2 class="text-3xl sm:text-4xl font-bold text-emerald-700">India's Progress Towards SDG 7</h2>
                 <p class="text-lg text-gray-600 mt-2 max-w-2xl mx-auto">India is making significant strides in its clean energy transition, becoming a global leader in renewables.</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                <div class="bg-gray-50 p-8 rounded-lg shadow-lg reveal" style="transition-delay: 100ms;">
+                <div class="bg-white p-8 rounded-lg shadow-lg reveal transition-all duration-300 hover:shadow-xl hover:-translate-y-2" style="transition-delay: 100ms;">
                     <div class="text-5xl font-bold text-emerald-600 mb-2">500 GW</div>
                     <p class="text-gray-600">India's ambitious goal for non-fossil fuel energy capacity by 2030, a cornerstone of its climate commitment.</p>
                 </div>
-                <div class="bg-gray-50 p-8 rounded-lg shadow-lg reveal" style="transition-delay: 250ms;">
+                <div class="bg-white p-8 rounded-lg shadow-lg reveal transition-all duration-300 hover:shadow-xl hover:-translate-y-2" style="transition-delay: 250ms;">
                     <div class="text-5xl font-bold text-emerald-600 mb-2">190+ GW</div>
                     <p class="text-gray-600">Total installed renewable energy capacity, making India one of the world's largest clean energy producers.</p>
                 </div>
-                <div class="bg-gray-50 p-8 rounded-lg shadow-lg reveal" style="transition-delay: 400ms;">
+                <div class="bg-white p-8 rounded-lg shadow-lg reveal transition-all duration-300 hover:shadow-xl hover:-translate-y-2" style="transition-delay: 400ms;">
                      <div class="text-5xl font-bold text-emerald-600 mb-2">99%+</div>
                     <p class="text-gray-600">Households electrified under national schemes, achieving near-universal energy access for millions.</p>
                 </div>
@@ -242,19 +268,19 @@
                 Individual actions, when combined, create a powerful movement for change. Here’s how you can contribute to India's clean energy goals.
             </p>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-left">
-                <div class="bg-emerald-700 p-6 rounded-lg">
+                <div class="bg-emerald-700 p-6 rounded-lg transition-transform transform hover:scale-105">
                     <h3 class="font-bold text-xl mb-2">1. Conserve Energy</h3>
                     <p class="text-emerald-200">Reduce your electricity consumption by using energy-efficient appliances, switching off lights, and being mindful of your daily usage.</p>
                 </div>
-                <div class="bg-emerald-700 p-6 rounded-lg">
+                <div class="bg-emerald-700 p-6 rounded-lg transition-transform transform hover:scale-105">
                     <h3 class="font-bold text-xl mb-2">2. Adopt Renewables</h3>
                     <p class="text-emerald-200">Consider installing rooftop solar panels. Many government subsidies and schemes make this more affordable than ever.</p>
                 </div>
-                <div class="bg-emerald-700 p-6 rounded-lg">
+                <div class="bg-emerald-700 p-6 rounded-lg transition-transform transform hover:scale-105">
                     <h3 class="font-bold text-xl mb-2">3. Support Green Policies</h3>
                     <p class="text-emerald-200">Stay informed about and support local and national policies that promote renewable energy and energy efficiency standards.</p>
                 </div>
-                <div class="bg-emerald-700 p-6 rounded-lg">
+                <div class="bg-emerald-700 p-6 rounded-lg transition-transform transform hover:scale-105">
                     <h3 class="font-bold text-xl mb-2">4. Educate & Advocate</h3>
                     <p class="text-emerald-200">Spread awareness in your community about the importance of clean energy and encourage others to take action.</p>
                 </div>
