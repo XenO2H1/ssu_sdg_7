@@ -82,7 +82,7 @@
                     <i class="ph-bold ph-plugs-connected text-green-600"></i>
                     Log Device Usage
                 </h2>
-                <p class="text-gray-600 mb-6">Enter the devices you used today. We'll compare it to yesterday's usage to calculate your savings.</p>
+                <p class="text-gray-600 mb-6">Enter your device usage for today. We'll compare it against your daily average to show your savings.</p>
                 <form id="device-form" class="space-y-4">
                     <div id="device-list">
                         <!-- Device entries will be added here by JavaScript -->
@@ -93,14 +93,18 @@
                     </button>
                     <button type="submit" class="btn-primary w-full">Calculate Today's Savings</button>
                 </form>
+                <div class="text-center mt-4">
+                    <button type="button" id="reset-data-btn" class="text-sm text-gray-500 hover:text-red-600 transition">Reset All Saved Data</button>
+                </div>
             </section>
 
             <!-- Results Section (Initially Hidden) -->
             <section id="results-section" class="hidden card p-6 fade-in">
-                 <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                 <h2 class="text-xl font-bold text-gray-800 mb-2 flex items-center gap-2">
                     <i class="ph-bold ph-chart-line-up text-blue-500"></i>
                     Your Results
                 </h2>
+                <p id="results-subtitle" class="text-gray-600 mb-4 text-sm">Comparison based on your daily average usage.</p>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
                     <div>
                         <p class="text-sm text-gray-500 font-medium">Energy Saved</p>
@@ -140,10 +144,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const deviceList = document.getElementById('device-list');
     const deviceForm = document.getElementById('device-form');
     const addDeviceBtn = document.getElementById('add-device-btn');
+    const resetDataBtn = document.getElementById('reset-data-btn');
     const resultsSection = document.getElementById('results-section');
     const energySavedResultEl = document.getElementById('energy-saved-result');
     const moneySavedResultEl = document.getElementById('money-saved-result');
     const co2ReducedResultEl = document.getElementById('co2-reduced-result');
+    const resultsSubtitle = document.getElementById('results-subtitle');
 
     // --- APP STATE & CONSTANTS ---
     const WATTAGE_MAP = {
@@ -157,6 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     const COST_PER_KWH = 8; // in ₹
     const CO2_PER_KWH = 0.82; // in kg
+    const HISTORY_KEY = 'ecoTrackHistory';
 
     // --- INITIALIZATION ---
     function init() {
@@ -166,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- EVENT LISTENERS ---
     addDeviceBtn.addEventListener('click', addDeviceRow);
     deviceForm.addEventListener('submit', handleCalculation);
-    // Use event delegation for remove buttons
+    resetDataBtn.addEventListener('click', handleResetData);
     deviceList.addEventListener('click', handleDeviceListClick);
 
     // --- DYNAMIC FORM LOGIC ---
@@ -192,65 +199,96 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     function handleDeviceListClick(e) {
-        // Find the closest remove button to where the user clicked
         const removeBtn = e.target.closest('.remove-device-btn');
         if (removeBtn) {
             const rowToRemove = removeBtn.closest('.device-row');
             if (rowToRemove) {
                 rowToRemove.remove();
             }
-            // If it was the last device row, add a new one to prevent an empty form
             if (deviceList.children.length === 0) {
                 addDeviceRow();
             }
         }
     }
 
-    // --- CALCULATION LOGIC ---
+    // --- NEW, ROBUST CALCULATION LOGIC ---
     function handleCalculation(e) {
         e.preventDefault();
         
         let totalKWhToday = 0;
         const deviceRows = document.querySelectorAll('.device-row');
 
-        if (deviceRows.length === 0) {
-            // Should not happen due to the fix in handleDeviceListClick, but good to have as a fallback.
-            alert("Please add at least one device.");
-            return;
-        }
+        if (deviceRows.length === 0) return;
 
         deviceRows.forEach(row => {
             const type = row.querySelector('.device-type').value;
             const count = parseFloat(row.querySelector('.device-count').value) || 0;
             const hours = parseFloat(row.querySelector('.device-hours').value) || 0;
-            
             const wattage = WATTAGE_MAP[type] || 0;
-            const kwh = (wattage * count * hours) / 1000;
-            totalKWhToday += kwh;
+            totalKWhToday += (wattage * count * hours) / 1000;
         });
 
-        // Get yesterday's usage from local storage, or assume 10% higher if no data exists
-        const yesterdayKWh = parseFloat(localStorage.getItem('yesterdayKWh')) || (totalKWhToday * 1.10);
+        const history = getHistory();
+        const todayStr = new Date().toISOString().split('T')[0];
+        
+        // Exclude today's entry from the average calculation
+        const pastEntries = history.filter(entry => entry.date !== todayStr);
+        
+        let averageKWh = 0;
+        let baselineText = '';
 
-        // Calculate savings
-        const savedKWh = Math.max(0, yesterdayKWh - totalKWhToday);
+        if (pastEntries.length > 0) {
+            const totalPastKWh = pastEntries.reduce((sum, entry) => sum + entry.kwh, 0);
+            averageKWh = totalPastKWh / pastEntries.length;
+            baselineText = `Compared to your ${pastEntries.length}-day average of ${averageKWh.toFixed(2)} kWh.`;
+        } else {
+            // For first-time users, create a hypothetical baseline for a good first experience
+            averageKWh = totalKWhToday * 1.15; // Assume 15% higher average
+             baselineText = "This is your first entry! We've set a baseline for you.";
+        }
+
+        const savedKWh = Math.max(0, averageKWh - totalKWhToday);
         const savedMoney = savedKWh * COST_PER_KWH;
         const reducedCO2 = savedKWh * CO2_PER_KWH;
 
-        // Update UI with results
-        updateResults(savedKWh, savedMoney, reducedCO2);
+        updateResults(savedKWh, savedMoney, reducedCO2, baselineText);
+        updateHistory(todayStr, totalKWhToday);
+    }
 
-        // Save today's usage as yesterday's for the next calculation
-        localStorage.setItem('yesterdayKWh', totalKWhToday.toFixed(2));
+    // --- DATA HANDLING ---
+    function getHistory() {
+        const historyJSON = localStorage.getItem(HISTORY_KEY);
+        return historyJSON ? JSON.parse(historyJSON) : [];
+    }
+
+    function updateHistory(date, kwh) {
+        let history = getHistory();
+        const todayEntryIndex = history.findIndex(entry => entry.date === date);
+
+        if (todayEntryIndex > -1) {
+            // Update today's entry if it already exists
+            history[todayEntryIndex].kwh = kwh;
+        } else {
+            // Add a new entry for today
+            history.push({ date, kwh });
+        }
+        localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+    }
+
+    function handleResetData() {
+        if (confirm("Are you sure you want to delete all your saved energy data? This action cannot be undone.")) {
+            localStorage.removeItem(HISTORY_KEY);
+            updateResults(0, 0, 0, "Your data has been reset.");
+            resultsSection.classList.add('hidden');
+        }
     }
     
     // --- UI UPDATES ---
-    function updateResults(kwh, money, co2) {
+    function updateResults(kwh, money, co2, subtitle) {
         energySavedResultEl.textContent = `${kwh.toFixed(2)} kWh`;
         moneySavedResultEl.textContent = `₹${money.toFixed(2)}`;
         co2ReducedResultEl.textContent = `${co2.toFixed(2)} kg`;
-        
-        // Show the results section
+        resultsSubtitle.textContent = subtitle;
         resultsSection.classList.remove('hidden');
     }
 
