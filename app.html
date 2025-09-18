@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EcoTrack - Energy Saver</title>
+    <title>EcoTrack - Energy Calculator</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Phosphor Icons -->
@@ -15,22 +15,13 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            /* Added a subtle, fluid gradient background */
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            background-color: #f0f4f8; /* Light blue-gray background */
         }
         .card {
-            background-color: rgba(255, 255, 255, 0.85); /* Slightly transparent cards */
-            backdrop-filter: blur(10px);
+            background-color: white;
             border-radius: 1rem;
             box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            /* Enhanced transition for a fluid feel */
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        .card:hover {
-            /* Added a subtle lift effect on hover */
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            transition: all 0.3s ease;
         }
         .btn-primary {
             background-color: #22c55e; /* Vibrant green */
@@ -38,109 +29,89 @@
             font-weight: 600;
             border-radius: 0.75rem;
             padding: 0.75rem 1.5rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 14px 0 rgb(0 118 255 / 10%);
+            transition: background-color 0.3s ease;
         }
         .btn-primary:hover {
             background-color: #16a34a; /* Darker green on hover */
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px 0 rgb(0 118 255 / 20%);
         }
-        /* Custom styles for form inputs for a cleaner look */
-        .form-input {
-             background-color: #f8fafc;
-             border-color: #e2e8f0;
-             transition: all 0.2s ease-in-out;
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
         }
-        .form-input:focus {
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.3);
-            border-color: #22c55e;
-        }
-        /* Animation for elements appearing on screen */
-        .fade-in-up {
-            animation: fadeInUp 0.6s ease-out forwards;
-            opacity: 0;
-        }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
-<body class="antialiased text-gray-800">
+<body class="antialiased">
     <div id="app" class="min-h-screen p-4 sm:p-6 lg:p-8">
         
         <!-- Header -->
-        <header class="mb-8 max-w-xl mx-auto">
-            <div class="flex justify-between items-center">
-                <a href="#" class="flex items-center gap-3 group">
-                    <i class="ph-bold ph-leaf text-4xl text-green-600 group-hover:animate-spin" style="animation-duration: 3s;"></i>
-                    <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">EcoTrack Saver</h1>
+        <header class="mb-8">
+            <div class="max-w-xl mx-auto flex justify-between items-center">
+                <a href="index.html" class="flex items-center gap-3 group">
+                    <i class="ph-bold ph-leaf text-4xl text-green-600 group-hover:animate-spin"></i>
+                    <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">EcoTrack Calculator</h1>
                 </a>
             </div>
         </header>
 
         <main class="max-w-xl mx-auto space-y-8">
             <!-- Device Usage Input Card -->
-            <section id="input-section" class="card p-6 md:p-8 fade-in-up">
-                <h2 class="text-xl font-bold text-gray-800 mb-2 flex items-center gap-2">
+            <section id="input-section" class="card p-6 fade-in">
+                <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
                     <i class="ph-bold ph-plugs-connected text-green-600"></i>
-                    Log Your Daily Energy Use
+                    Log Device Usage
                 </h2>
-                <p id="form-subtitle" class="text-gray-600 mb-6">Enter the devices you used today. We'll calculate your total consumption.</p>
+                <p class="text-gray-600 mb-6">Enter the devices you used today. We'll compare it to yesterday's usage to calculate your savings.</p>
                 <form id="device-form" class="space-y-4">
                     <div id="device-list">
                         <!-- Device entries will be added here by JavaScript -->
                     </div>
-                    <button type="button" id="add-device-btn" class="w-full flex items-center justify-center gap-2 py-3 px-4 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:bg-gray-100 hover:border-green-400 transition-all duration-300">
+                    <button type="button" id="add-device-btn" class="w-full flex items-center justify-center gap-2 py-2 px-4 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:bg-gray-100 hover:border-gray-400 transition">
                         <i class="ph-bold ph-plus-circle"></i>
                         Add Another Device
                     </button>
-                    <button type="submit" id="submit-btn" class="btn-primary w-full text-lg">Calculate Today's Usage</button>
+                    <button type="submit" class="btn-primary w-full">Calculate Today's Savings</button>
                 </form>
             </section>
 
             <!-- Results Section (Initially Hidden) -->
-            <section id="results-section" class="hidden card p-6 md:p-8">
-                 <h2 id="results-title" class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+            <section id="results-section" class="hidden card p-6 fade-in">
+                 <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
                     <i class="ph-bold ph-chart-line-up text-blue-500"></i>
-                    <!-- Title updated by JS -->
+                    Your Results
                 </h2>
-                <div id="results-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
-                    <!-- Results content is dynamically generated by JS -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
+                    <div>
+                        <p class="text-sm text-gray-500 font-medium">Energy Saved</p>
+                        <p id="energy-saved-result" class="text-2xl font-bold text-green-600">0.00 kWh</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500 font-medium">Money Saved</p>
+                        <p id="money-saved-result" class="text-2xl font-bold text-blue-600">₹0.00</p>
+                    </div>
+                     <div>
+                        <p class="text-sm text-gray-500 font-medium">CO₂ Reduction</p>
+                        <p id="co2-reduced-result" class="text-2xl font-bold text-gray-700">0.00 kg</p>
+                    </div>
                 </div>
             </section>
 
-            <!-- About Eco Track Section (New) -->
-            <section class="card p-6 md:p-8 fade-in-up" style="animation-delay: 100ms;">
-                 <div class="flex items-start gap-4">
-                    <i class="ph-bold ph-info text-5xl text-blue-500 flex-shrink-0 mt-1"></i>
-                    <div>
-                        <h2 class="text-xl font-bold mb-2">What is EcoTrack?</h2>
-                        <p class="text-gray-700">EcoTrack helps you visualize your daily energy consumption. By becoming more aware of how much energy your devices use, you can make smarter choices that save you money and reduce your carbon footprint. Small changes, big impact!</p>
-                    </div>
-                 </div>
-            </section>
-
             <!-- SDG 7 Link Card -->
-            <section class="card p-6 md:p-8 bg-green-600 text-white fade-in-up" style="animation-delay: 200ms;">
+            <section class="card p-6 bg-green-500 text-white fade-in">
                  <div class="flex items-start gap-4">
                     <i class="ph-bold ph-lightbulb text-5xl text-yellow-300 flex-shrink-0 mt-1"></i>
                     <div>
                         <h2 class="text-xl font-bold mb-2">Knowledge is Power</h2>
                         <p class="text-green-100 mb-4">Your efforts directly contribute to a global goal for a sustainable future.</p>
-                        <a href="https://sdgs.un.org/goals/goal7" target="_blank" class="font-semibold text-white inline-flex items-center gap-1.5 group">
-                            Learn about SDG 7 <i class="ph-bold ph-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                        <a href="https://sdgs.un.org/goals/goal7" target="_blank" class="font-semibold text-white inline-flex items-center gap-1 hover:underline">
+                            Learn about SDG 7: Affordable and Clean Energy <i class="ph-bold ph-arrow-right"></i>
                         </a>
                     </div>
                  </div>
             </section>
         </main>
-        
-        <footer class="text-center mt-8">
-            <button id="clear-data-btn" class="text-sm text-gray-500 hover:text-red-600 hover:underline transition">Clear Saved Data</button>
-        </footer>
     </div>
 
 <script>
@@ -150,12 +121,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const deviceList = document.getElementById('device-list');
     const deviceForm = document.getElementById('device-form');
     const addDeviceBtn = document.getElementById('add-device-btn');
-    const submitBtn = document.getElementById('submit-btn');
-    const formSubtitle = document.getElementById('form-subtitle');
     const resultsSection = document.getElementById('results-section');
-    const resultsTitle = document.getElementById('results-title');
-    const resultsGrid = document.getElementById('results-grid');
-    const clearDataBtn = document.getElementById('clear-data-btn');
+    const energySavedResultEl = document.getElementById('energy-saved-result');
+    const moneySavedResultEl = document.getElementById('money-saved-result');
+    const co2ReducedResultEl = document.getElementById('co2-reduced-result');
 
     // --- APP STATE & CONSTANTS ---
     const WATTAGE_MAP = {
@@ -164,179 +133,97 @@ document.addEventListener('DOMContentLoaded', () => {
         'Projector': 50,
         'AC (1.5 Ton)': 1500,
         'Computer': 200,
-        'Lift': 7000,
-        'TV (42" LED)': 120,
-        'Refrigerator': 200,
-        'Phone Charger': 5,
+        'Lift': 7000, // Using an average value
         'Other': 100
     };
     const COST_PER_KWH = 8; // in ₹
     const CO2_PER_KWH = 0.82; // in kg
 
-    // --- CORE LOGIC ---
-    
-    // Animate numbers counting up for a fluid feel
-    function animateValue(element, start, end, duration, prefix = '', suffix = '') {
-        let startTimestamp = null;
-        const step = (timestamp) => {
-            if (!startTimestamp) startTimestamp = timestamp;
-            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-            const value = progress * (end - start) + start;
-            element.textContent = `${prefix}${value.toFixed(2)}${suffix}`;
-            if (progress < 1) {
-                window.requestAnimationFrame(step);
-            }
-        };
-        window.requestAnimationFrame(step);
+    // --- INITIALIZATION ---
+    function init() {
+        addDeviceRow(); // Add one device row by default
     }
 
-    // Function to update the UI based on whether there's previous data
-    function initializeUI() {
-        const yesterdayKWh = localStorage.getItem('yesterdayKWh');
-        if (yesterdayKWh) {
-            submitBtn.textContent = "Calculate Today's Savings";
-            formSubtitle.innerHTML = `Let's see how you did today! Yesterday's usage was <span class="font-bold text-green-600">${yesterdayKWh} kWh</span>.`;
-        } else {
-            submitBtn.textContent = "Calculate Today's Usage";
-            formSubtitle.textContent = "Enter the devices you used today. We'll calculate your total consumption.";
-        }
-    }
-    
-    // Add a new device input row
+    // --- DYNAMIC FORM LOGIC ---
+    addDeviceBtn.addEventListener('click', addDeviceRow);
+
     function addDeviceRow() {
+        const deviceId = Date.now(); // Unique ID for the row
         const row = document.createElement('div');
-        row.className = 'device-row grid grid-cols-10 gap-2 items-center fade-in-up';
-        row.style.opacity = '0'; // Start invisible for animation
+        row.className = 'device-row grid grid-cols-4 gap-2 items-center mb-2 fade-in';
+        row.dataset.id = deviceId;
 
         const selectOptions = Object.keys(WATTAGE_MAP).map(device => `<option value="${device}">${device}</option>`).join('');
 
         row.innerHTML = `
-            <select class="device-type col-span-5 w-full p-2 border rounded-md form-input">
+            <select class="device-type col-span-2 w-full p-2 border border-gray-300 rounded-md">
                 ${selectOptions}
             </select>
-            <input type="number" class="device-count col-span-2 w-full p-2 border rounded-md form-input text-center" placeholder="Qty" min="1" value="1">
-            <input type="number" class="device-hours col-span-2 w-full p-2 border rounded-md form-input text-center" placeholder="Hrs" min="0" step="0.1" required>
-            <button type="button" class="remove-device-btn text-gray-400 hover:text-red-500 transition-colors col-span-1 flex justify-center">
-                <i class="ph-bold ph-trash text-xl"></i>
-            </button>
+            <input type="number" class="device-count w-full p-2 border border-gray-300 rounded-md" placeholder="Qty" min="1" value="1">
+            <div class="flex items-center">
+                <input type="number" class="device-hours w-full p-2 border border-gray-300 rounded-md" placeholder="Hrs" min="0" step="0.1" required>
+                <button type="button" class="remove-device-btn text-red-500 hover:text-red-700 p-1" onclick="removeDeviceRow(${deviceId})">
+                    <i class="ph-bold ph-trash text-xl"></i>
+                </button>
+            </div>
         `;
         deviceList.appendChild(row);
     }
     
-    // --- EVENT LISTENERS ---
-    addDeviceBtn.addEventListener('click', addDeviceRow);
-    
-    // Event Delegation for remove buttons. This is more efficient.
-    deviceList.addEventListener('click', (e) => {
-        const removeBtn = e.target.closest('.remove-device-btn');
-        if (removeBtn) {
-            const rowToRemove = removeBtn.closest('.device-row');
-            if (rowToRemove) {
-                rowToRemove.style.animation = 'fadeOut 0.3s forwards';
-                setTimeout(() => rowToRemove.remove(), 300);
-            }
+    // Make remove function global to be accessible from inline onclick
+    window.removeDeviceRow = function(id) {
+        const rowToRemove = document.querySelector(`.device-row[data-id='${id}']`);
+        if(rowToRemove) {
+            rowToRemove.remove();
         }
-    });
-    
-    // Handle the main form submission and calculation
+    }
+
+    // --- CALCULATION LOGIC ---
     deviceForm.addEventListener('submit', (e) => {
         e.preventDefault();
         
         let totalKWhToday = 0;
         const deviceRows = document.querySelectorAll('.device-row');
 
-        if (deviceRows.length === 0) {
-            alert("Please add at least one device.");
-            return;
-        }
-
         deviceRows.forEach(row => {
             const type = row.querySelector('.device-type').value;
             const count = parseFloat(row.querySelector('.device-count').value) || 0;
             const hours = parseFloat(row.querySelector('.device-hours').value) || 0;
+            
             const wattage = WATTAGE_MAP[type] || 0;
-            totalKWhToday += (wattage * count * hours) / 1000;
+            const kwh = (wattage * count * hours) / 1000;
+            totalKWhToday += kwh;
         });
 
-        const yesterdayKWh = localStorage.getItem('yesterdayKWh');
+        // Get yesterday's usage from local storage, or assume 10% higher if no data exists
+        const yesterdayKWh = parseFloat(localStorage.getItem('yesterdayKWh')) || (totalKWhToday * 1.10);
 
-        if (yesterdayKWh) {
-            // User has previous data, so calculate savings
-            const savedKWh = parseFloat(yesterdayKWh) - totalKWhToday;
-            const savedMoney = savedKWh * COST_PER_KWH;
-            const reducedCO2 = savedKWh * CO2_PER_KWH;
-            updateResultsForSavings(savedKWh, savedMoney, reducedCO2);
-        } else {
-            // First time user, just show today's consumption
-            const costToday = totalKWhToday * COST_PER_KWH;
-            const co2Today = totalKWhToday * CO2_PER_KWH;
-            updateResultsForFirstTime(totalKWhToday, costToday, co2Today);
-        }
+        // Calculate savings
+        const savedKWh = Math.max(0, yesterdayKWh - totalKWhToday);
+        const savedMoney = savedKWh * COST_PER_KWH;
+        const reducedCO2 = savedKWh * CO2_PER_KWH;
 
-        // Save today's usage for tomorrow's comparison and re-initialize UI
+        // Update UI with results
+        updateResults(savedKWh, savedMoney, reducedCO2);
+
+        // Save today's usage as yesterday's for the next calculation
         localStorage.setItem('yesterdayKWh', totalKWhToday.toFixed(2));
-        setTimeout(initializeUI, 100); // slight delay to allow results to show
     });
-
-    // Clear data from localStorage
-    clearDataBtn.addEventListener('click', () => {
-        if(confirm("Are you sure you want to clear your saved energy data?")) {
-            localStorage.removeItem('yesterdayKWh');
-            initializeUI();
-            resultsSection.classList.add('hidden');
-            alert("Your data has been cleared.");
-        }
-    });
-
-    // --- UI UPDATE FUNCTIONS ---
-    function createResultCard(label, value, prefix, suffix, colorClass) {
-        const card = document.createElement('div');
-        card.className = `p-4 rounded-lg ${colorClass} bg-opacity-10`;
-        card.innerHTML = `
-            <p class="text-sm font-medium opacity-70">${label}</p>
-            <p class="text-2xl lg:text-3xl font-bold result-value">0.00</p>
-        `;
-        const valueEl = card.querySelector('.result-value');
-        animateValue(valueEl, 0, value, 1000, prefix, suffix);
-        return card;
-    }
-
-    function updateResultsForSavings(kwh, money, co2) {
-        resultsTitle.innerHTML = `<i class="ph-bold ph-sparkle text-yellow-500"></i> Your Savings Today!`;
-        resultsGrid.innerHTML = ''; // Clear previous results
-        
-        const kwhCard = createResultCard(kwh >= 0 ? 'Energy Saved' : 'Energy Used More', Math.abs(kwh), '', ' kWh', kwh >= 0 ? 'text-green-600' : 'text-red-600');
-        const moneyCard = createResultCard(money >= 0 ? 'Money Saved' : 'Money Spent More', Math.abs(money), '₹', '', money >= 0 ? 'text-blue-600' : 'text-red-600');
-        const co2Card = createResultCard(co2 >= 0 ? 'CO₂ Reduced' : 'CO₂ Emitted More', Math.abs(co2), '', ' kg', co2 >= 0 ? 'text-gray-700' : 'text-red-600');
-        
-        resultsGrid.appendChild(kwhCard);
-        resultsGrid.appendChild(moneyCard);
-        resultsGrid.appendChild(co2Card);
-        
-        resultsSection.classList.remove('hidden');
-        resultsSection.classList.add('fade-in-up');
-    }
-
-    function updateResultsForFirstTime(kwh, money, co2) {
-        resultsTitle.innerHTML = `<i class="ph-bold ph-chart-bar text-green-500"></i> Today's Consumption`;
-        resultsGrid.innerHTML = '';
-        
-        const kwhCard = createResultCard('Energy Used', kwh, '', ' kWh', 'text-green-600');
-        const moneyCard = createResultCard('Estimated Cost', money, '₹', '', 'text-blue-600');
-        const co2Card = createResultCard('CO₂ Footprint', co2, '', ' kg', 'text-gray-700');
-        
-        resultsGrid.appendChild(kwhCard);
-        resultsGrid.appendChild(moneyCard);
-        resultsGrid.appendChild(co2Card);
-        
-        resultsSection.classList.remove('hidden');
-        resultsSection.classList.add('fade-in-up');
-    }
     
-    // --- INITIALIZATION ---
-    addDeviceRow(); // Start with one device row
-    initializeUI(); // Set the initial state of the form
+    // --- UI UPDATES ---
+    function updateResults(kwh, money, co2) {
+        energySavedResultEl.textContent = `${kwh.toFixed(2)} kWh`;
+        moneySavedResultEl.textContent = `₹${money.toFixed(2)}`;
+        co2ReducedResultEl.textContent = `${co2.toFixed(2)} kg`;
+        
+        // Show the results section
+        resultsSection.classList.remove('hidden');
+    }
+
+    // --- KICKSTART THE APP ---
+    init();
 });
 </script>
 </body>
 </html>
+
