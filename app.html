@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EcoHub - AI & Community Energy Platform</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>EcoHub - The Ultimate Energy & Savings Dashboard</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Phosphor Icons -->
@@ -15,60 +15,20 @@
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f0f7ff;
-        }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            border-radius: 1.5rem;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, #0ea5e9, #2563eb);
-            color: white;
-            font-weight: 600;
-            border-radius: 0.75rem;
-            padding: 0.85rem 1.5rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px 0 rgba(37, 99, 235, 0.3);
-            border: none;
-        }
-        .btn-primary:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px 0 rgba(37, 99, 235, 0.4);
-        }
-        .btn-primary:disabled {
-            background: #9ca3af;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
-        .fade-in-up { animation: fadeInUp 0.5s ease-in-out forwards; }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .tab { transition: all 0.3s ease; }
-        .tab.active {
-            background-color: white;
-            color: #2563eb;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        
-        /* Modal & Toast Styles */
-        .modal-overlay { transition: opacity 0.3s ease; }
-        .modal-content { transition: transform 0.3s ease, opacity 0.3s ease; }
-        .toast {
-            transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
-            transform: translateY(100%);
-            opacity: 0;
-        }
-        .toast.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
+        body { font-family: 'Poppins', sans-serif; background-color: #f0f7ff; }
+        .glass-card { background: rgba(255,255,255,0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.25); border-radius: 1.5rem; box-shadow: 0 8px 32px 0 rgba(31,38,135,0.1); }
+        .btn-primary { background: linear-gradient(135deg,#0ea5e9,#2563eb); color:white; font-weight:600; border-radius:.75rem; padding:.85rem 1.5rem; transition: all .3s ease; box-shadow: 0 4px 15px rgba(37,99,235,0.3); border:none; }
+        .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37,99,235,0.4); }
+        .btn-primary:disabled { background:#9ca3af; cursor:not-allowed; box-shadow:none; }
+        .fade-in-up { animation: fadeInUp .5s ease-in-out forwards; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0);} }
+        .tab { transition: all .3s ease; }
+        .tab.active { background-color: white; color:#2563eb; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .tab-content { display: none; } .tab-content.active { display:block; }
+        .modal-overlay { transition: opacity .3s ease; }
+        .modal-content { transition: transform .3s ease, opacity .3s ease; }
+        .toast { transition: transform .5s ease-in-out, opacity .5s ease-in-out; transform: translateY(100%); opacity: 0; }
+        .toast.show { transform: translateY(0); opacity: 1; }
     </style>
 </head>
 <body class="antialiased text-gray-800">
@@ -81,7 +41,7 @@
     <div id="app" class="min-h-screen p-4 sm:p-6 lg:p-8">
         <!-- Header -->
         <header class="mb-6 max-w-7xl mx-auto flex justify-between items-center">
-             <a href="index.html" class="flex items-center gap-3 group w-fit">
+            <a href="#" class="flex items-center gap-3 group w-fit">
                 <i class="ph-bold ph-leaf text-4xl text-emerald-600 group-hover:animate-spin"></i>
                 <div>
                     <h1 class="text-3xl font-bold">EcoHub</h1>
@@ -94,79 +54,40 @@
         </header>
 
         <main class="max-w-7xl mx-auto">
-            <!-- Tabs Navigation -->
+            <!-- Tabs -->
             <div class="mb-6 bg-white/50 backdrop-blur-sm p-2 rounded-xl inline-flex gap-2 border flex-wrap">
                 <button class="tab active font-semibold py-2 px-5 rounded-lg" data-tab="dashboard">Dashboard</button>
-                <button class="tab font-semibold py-2 px-5 rounded-lg" data-tab="eco-coach">EcoCoach AI</button>
-                <button class="tab font-semibold py-2 px-5 rounded-lg" data-tab="community">Community</button>
                 <button class="tab font-semibold py-2 px-5 rounded-lg" data-tab="goals">Goals</button>
                 <button class="tab font-semibold py-2 px-5 rounded-lg" data-tab="reports">Reports</button>
                 <button class="tab font-semibold py-2 px-5 rounded-lg" data-tab="achievements">Achievements</button>
                 <button class="tab font-semibold py-2 px-5 rounded-lg" data-tab="settings">Settings</button>
             </div>
 
-            <!-- Tab Content -->
+            <!-- Tab contents (same structure as your original) -->
             <div id="dashboard-tab" class="tab-content active fade-in-up">
-                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div class="lg:col-span-2 space-y-8">
                         <section class="glass-card p-6">
-                             <h2 class="text-2xl font-bold mb-4">Today's Impact Summary</h2>
-                             <p id="results-subtitle" class="text-gray-600 mb-6 text-sm">Log your usage to see your savings for today.</p>
+                            <h2 class="text-2xl font-bold mb-4">Today's Impact Summary</h2>
+                            <p id="results-subtitle" class="text-gray-600 mb-6 text-sm">Log your usage to see your savings for today.</p>
                             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
                                 <div class="bg-emerald-50 p-4 rounded-xl"><p class="text-sm text-emerald-800 font-medium">Energy Saved</p><p id="energy-saved-result" class="text-4xl font-bold text-emerald-600">0.00</p><p class="text-xs text-emerald-500">kWh</p></div>
                                 <div class="bg-sky-50 p-4 rounded-xl"><p class="text-sm text-sky-800 font-medium">Money Saved</p><p id="money-saved-result" class="text-4xl font-bold text-sky-600">0.00</p><p class="text-xs text-sky-500">INR</p></div>
-                                 <div class="bg-gray-100 p-4 rounded-xl"><p class="text-sm text-gray-800 font-medium">CO₂ Reduction</p><p id="co2-reduced-result" class="text-4xl font-bold text-gray-700">0.00</p><p class="text-xs text-gray-500">kg</p></div>
+                                <div class="bg-gray-100 p-4 rounded-xl"><p class="text-sm text-gray-800 font-medium">CO₂ Reduction</p><p id="co2-reduced-result" class="text-4xl font-bold text-gray-700">0.00</p><p class="text-xs text-gray-500">kg</p></div>
                             </div>
                         </section>
-                        <section class="glass-card p-6"><h2 class="text-2xl font-bold mb-4">Your 7-Day Energy Trend</h2><div class="h-64"><canvas id="energy-chart"></canvas></div></section>
+
+                        <section class="glass-card p-6">
+                            <h2 class="text-2xl font-bold mb-4">Your 7-Day Energy Trend</h2>
+                            <div class="h-64"><canvas id="energy-chart"></canvas></div>
+                        </section>
                     </div>
+
                     <div class="space-y-8">
                         <section class="glass-card p-6"><h2 class="text-2xl font-bold mb-4">Weekly Goal</h2><p class="text-sm text-gray-600 mb-2">Target: <span id="goal-target-summary" class="font-bold">Not set</span></p><div class="w-full bg-gray-200 rounded-full h-4 mb-2"><div id="goal-progress-bar-summary" class="bg-blue-500 h-4 rounded-full" style="width: 0%"></div></div><p id="goal-status-summary" class="text-sm text-gray-600">Set a goal to start tracking.</p></section>
-                         <section class="glass-card p-6"><h2 class="text-2xl font-bold mb-4">Quick Stats</h2><div class="space-y-3"><div><p class="font-semibold">All-Time Savings</p><p id="all-time-savings-stat" class="text-blue-600 font-bold text-2xl">0.00 kWh</p></div><div><p class="font-semibold">Best Day (Lowest Use)</p><p id="best-day-stat" class="text-emerald-600 font-bold text-2xl">N/A</p></div><div><p class="font-semibold">Consecutive Days Logged</p><p id="streak-stat" class="text-orange-500 font-bold text-2xl">0</p></div></div></section>
-                    </div>
-                </div>
-            </div>
 
-            <div id="eco-coach-tab" class="tab-content fade-in-up">
-                <section class="glass-card p-8">
-                    <div class="text-center mb-8">
-                        <i class="ph-bold ph-robot text-6xl text-blue-500"></i>
-                        <h2 class="text-3xl font-bold mt-2">EcoCoach AI</h2>
-                        <p class="text-gray-600">Your personal energy saving assistant.</p>
+                        <section class="glass-card p-6"><h2 class="text-2xl font-bold mb-4">Quick Stats</h2><div class="space-y-3"><div><p class="font-semibold">All-Time Savings</p><p id="all-time-savings-stat" class="text-blue-600 font-bold text-2xl">0.00 kWh</p></div><div><p class="font-semibold">Best Day (Lowest Use)</p><p id="best-day-stat" class="text-emerald-600 font-bold text-2xl">N/A</p></div><div><p class="font-semibold">Consecutive Days Logged</p><p id="streak-stat" class="text-orange-500 font-bold text-2xl">0</p></div></div></section>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div class="bg-white/80 p-6 rounded-xl">
-                            <h3 class="text-xl font-bold mb-3">Personalized Tip of the Day</h3>
-                            <p id="eco-coach-tip" class="text-gray-700">Log your usage to get your first tip!</p>
-                        </div>
-                        <div class="bg-white/80 p-6 rounded-xl">
-                            <h3 class="text-xl font-bold mb-3">Your Weekly Report Card</h3>
-                            <p id="eco-coach-summary" class="text-gray-700">Not enough data for a weekly summary yet. Keep logging!</p>
-                        </div>
-                        <div class="md:col-span-2 bg-emerald-50 p-6 rounded-xl text-center">
-                             <h3 class="text-xl font-bold mb-3">Did You Know?</h3>
-                             <p id="eco-coach-fact" class="text-emerald-800 italic"></p>
-                        </div>
-                    </div>
-                </section>
-            </div>
-            
-            <div id="community-tab" class="tab-content fade-in-up">
-                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <section class="glass-card p-8">
-                        <h2 class="text-2xl font-bold mb-4">Community Challenge</h2>
-                        <p class="text-gray-600 mb-2">Help us collectively save <strong class="text-emerald-600">1,000 kWh</strong> this month!</p>
-                        <div class="w-full bg-gray-200 rounded-full h-6 mb-2">
-                            <div id="community-goal-progress-bar" class="bg-gradient-to-r from-emerald-400 to-green-500 h-6 rounded-full flex items-center justify-center text-white font-bold text-sm" style="width: 0%">0%</div>
-                        </div>
-                        <p id="community-goal-status" class="text-sm text-gray-600 text-center">Let's get started!</p>
-                    </section>
-                     <section class="glass-card p-8">
-                        <h2 class="text-2xl font-bold mb-4">Weekly Savings Leaderboard</h2>
-                        <div id="leaderboard-container" class="space-y-3">
-                            <!-- JS will populate this -->
-                        </div>
-                    </section>
                 </div>
             </div>
 
@@ -175,7 +96,7 @@
             </div>
 
             <div id="reports-tab" class="tab-content fade-in-up">
-                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     <section class="glass-card p-6">
                         <h2 class="text-2xl font-bold mb-6">Detailed History</h2>
                         <div id="history-table-container" class="max-h-96 overflow-y-auto"></div>
@@ -207,20 +128,31 @@
 
     <!-- Log Usage Modal -->
     <div id="log-usage-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden modal-overlay opacity-0">
-        <div class="glass-card p-6 w-full max-w-lg modal-content opacity-0 transform scale-95"><div class="flex justify-between items-center mb-4"><h2 class="text-2xl font-bold">Log Your Daily Usage</h2><button id="close-log-modal-btn" class="text-gray-500 hover:text-gray-800"><i class="ph-bold ph-x text-2xl"></i></button></div><form id="device-form" class="space-y-4"><div id="device-list" class="max-h-60 overflow-y-auto pr-2 space-y-2"></div><div class="p-2 bg-blue-50 rounded-lg text-center font-bold text-blue-700">Total for this entry: <span id="modal-kwh-total">0.00</span> kWh</div><button type="button" id="add-device-btn" class="w-full flex items-center justify-center gap-2 py-2 px-4 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:bg-gray-100/50 hover:border-gray-400 transition"><i class="ph-bold ph-plus-circle"></i> Add Device</button><button type="submit" id="save-log-btn" class="btn-primary w-full" disabled>Calculate & Save</button></form></div>
+        <div class="glass-card p-6 w-full max-w-lg modal-content opacity-0 transform scale-95">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold">Log Your Daily Usage</h2>
+                <button id="close-log-modal-btn" class="text-gray-500 hover:text-gray-800"><i class="ph-bold ph-x text-2xl"></i></button>
+            </div>
+            <form id="device-form" class="space-y-4">
+                <div id="device-list" class="max-h-60 overflow-y-auto pr-2 space-y-2"></div>
+                <div class="p-2 bg-blue-50 rounded-lg text-center font-bold text-blue-700">Total for this entry: <span id="modal-kwh-total">0.00</span> kWh</div>
+                <button type="button" id="add-device-btn" class="w-full flex items-center justify-center gap-2 py-2 px-4 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:bg-gray-100/50 hover:border-gray-400 transition"><i class="ph-bold ph-plus-circle"></i> Add Device</button>
+                <button type="submit" id="save-log-btn" class="btn-primary w-full" disabled>Calculate & Save</button>
+            </form>
+        </div>
     </div>
-    
+
     <!-- Toast Notification -->
-    <div id="toast" class="toast fixed bottom-8 right-8 bg-gray-800 text-white p-4 rounded-lg shadow-lg flex items-center gap-3 z-50">
+    <div id="toast" class="toast fixed bottom-8 right-8 bg-gray-800 text-white p-4 rounded-lg shadow-lg flex items-center gap-3" aria-live="polite" role="status" style="display:none">
         <i id="toast-icon" class="ph-bold ph-check-circle text-2xl text-green-400"></i>
         <span id="toast-message"></span>
     </div>
 
 <script>
-// Logic encapsulated in an IIFE to avoid polluting the global scope
 (() => {
     document.addEventListener('DOMContentLoaded', () => {
-        // --- CENTRALIZED STATE & DEFAULTS ---
+
+        // --- Central state & defaults
         const AppState = {
             history: [],
             goal: null,
@@ -232,40 +164,27 @@
             achievements: []
         };
 
+        // Achievement definitions (icon classes include ph-bold prefix for consistency)
         const ACHIEVEMENT_DEFS = {
-            FIRST_LOG: { id: 'FIRST_LOG', title: "First Step", desc: "Log your first day of usage.", icon: "ph-footprints" },
-            STREAK_3: { id: 'STREAK_3', title: "On a Roll", desc: "Log usage for 3 days in a row.", icon: "ph-fire" },
-            STREAK_7: { id: 'STREAK_7', title: "Weekly Warrior", desc: "Log usage for 7 days in a row.", icon: "ph-calendar-check" },
-            SAVE_10_KWH: { id: 'SAVE_10_KWH', title: "Energy Saver", desc: "Save a total of 10 kWh.", icon: "ph-plugs" },
-            SAVE_50_KWH: { id: 'SAVE_50_KWH', title: "Conservationist", desc: "Save a total of 50 kWh.", icon: "ph-tree-evergreen" },
-            GOAL_SET: { id: 'GOAL_SET', title: "Goal Setter", desc: "Set your first weekly goal.", icon: "ph-flag-checkered" },
+            FIRST_LOG: { id: 'FIRST_LOG', title: "First Step", desc: "Log your first day of usage.", icon: "ph-bold ph-footprints" },
+            STREAK_3: { id: 'STREAK_3', title: "On a Roll", desc: "Log usage for 3 days in a row.", icon: "ph-bold ph-fire" },
+            STREAK_7: { id: 'STREAK_7', title: "Weekly Warrior", desc: "Log usage for 7 days in a row.", icon: "ph-bold ph-calendar-check" },
+            SAVE_10_KWH: { id: 'SAVE_10_KWH', title: "Energy Saver", desc: "Save a total of 10 kWh.", icon: "ph-bold ph-plugs" },
+            SAVE_50_KWH: { id: 'SAVE_50_KWH', title: "Conservationist", desc: "Save a total of 50 kWh.", icon: "ph-bold ph-tree-evergreen" },
+            GOAL_SET: { id: 'GOAL_SET', title: "Goal Setter", desc: "Set your first weekly goal.", icon: "ph-bold ph-flag-checkered" },
         };
-        
-        const ECO_COACH_TIPS = {
-            'AC (1.5 Ton)': "Your AC usage is high. Try setting the thermostat a degree higher or using a timer to reduce consumption overnight.",
-            'Lift': "Lifts are energy-intensive. Consider taking the stairs for short trips to save power and get some exercise!",
-            'Projector': "Projectors consume significant energy. Ensure they're turned off completely when not in use, as standby mode still draws power.",
-            'Computer': "High computer usage. Remember to use sleep mode for short breaks and shut down fully at the end of the day.",
-            'DEFAULT': "Great job logging today! A simple tip: unplug chargers and appliances when not in use, as they can draw 'phantom power'."
-        };
-        
-        const ECO_COACH_FACTS = [
-            "A single LED bulb is 80% more efficient than a traditional incandescent bulb.",
-            "Phantom power from idle electronics can account for up to 10% of household energy use.",
-            "For every degree you raise your AC's thermostat in summer, you can save up to 3% on your cooling bill.",
-            "India has one of the world's largest renewable energy expansion programs.",
-            "Saving just 1 kWh of electricity prevents about 0.82 kg of CO₂ from entering the atmosphere."
-        ];
 
+        // Chart references
         let energyChart = null;
         let devicePieChart = null;
-        
-        // --- DOM ELEMENT SELECTORS ---
-        const DOMElements = {
+
+        // --- DOM references (defensive)
+        const DOM = {
             tabs: document.querySelectorAll('.tab'),
             tabContents: document.querySelectorAll('.tab-content'),
             modal: document.getElementById('log-usage-modal'),
-            modalOverlay: document.querySelector('#log-usage-modal .modal-overlay'),
+            // modal overlay is the same element as #log-usage-modal in markup
+            modalOverlay: document.getElementById('log-usage-modal'),
             modalContent: document.querySelector('#log-usage-modal .modal-content'),
             openModalBtn: document.getElementById('open-log-modal-btn'),
             closeModalBtn: document.getElementById('close-log-modal-btn'),
@@ -274,53 +193,97 @@
             deviceForm: document.getElementById('device-form'),
             saveLogBtn: document.getElementById('save-log-btn'),
             modalKwhTotal: document.getElementById('modal-kwh-total'),
+            toast: document.getElementById('toast'),
+            toastIcon: document.getElementById('toast-icon'),
+            toastMessage: document.getElementById('toast-message'),
+            historyContainer: document.getElementById('history-table-container'),
+            energyCanvas: document.getElementById('energy-chart'),
+            devicePieCanvas: document.getElementById('device-pie-chart'),
         };
 
-        // --- STATE MANAGEMENT ---
-        const loadState = () => {
+        // --- Helpers ---
+        const safeParseJSON = (str, fallback) => {
+            try { return JSON.parse(str); } catch (e) { return fallback; }
+        };
+
+        const isValidNumber = v => typeof v === 'number' && !isNaN(v) && isFinite(v);
+
+        // --- Storage ---
+        function loadState() {
             try {
-                const history = JSON.parse(localStorage.getItem('ecoHubHistory') || '[]');
-                const goal = JSON.parse(localStorage.getItem('ecoHubGoal') || 'null');
-                const settings = JSON.parse(localStorage.getItem('ecoHubSettings') || 'null');
-                const achievements = JSON.parse(localStorage.getItem('ecoHubAchievements') || '[]');
-                
-                AppState.history = history;
-                AppState.goal = goal;
-                AppState.achievements = achievements;
-                if (settings) AppState.settings = { ...AppState.settings, ...settings };
+                const history = safeParseJSON(localStorage.getItem('ecoHubHistory'), []);
+                const goal = safeParseJSON(localStorage.getItem('ecoHubGoal'), null);
+                const settings = safeParseJSON(localStorage.getItem('ecoHubSettings'), null);
+                const achievements = safeParseJSON(localStorage.getItem('ecoHubAchievements'), []);
 
-            } catch (error) {
-                console.error("Failed to load state from localStorage:", error);
-                localStorage.clear();
+                if (Array.isArray(history)) AppState.history = history;
+                if (goal !== null) AppState.goal = goal;
+                if (Array.isArray(achievements)) AppState.achievements = achievements;
+                if (settings && typeof settings === 'object') AppState.settings = { ...AppState.settings, ...settings };
+
+            } catch (err) {
+                console.error('Failed to load state:', err);
+                // fallback to defaults but do not clear entire localStorage (less destructive)
+                AppState.history = [];
+                AppState.goal = null;
+                AppState.achievements = [];
             }
-        };
+        }
 
-        const commitState = () => {
+        function commitState() {
             try {
                 localStorage.setItem('ecoHubHistory', JSON.stringify(AppState.history));
                 localStorage.setItem('ecoHubGoal', JSON.stringify(AppState.goal));
                 localStorage.setItem('ecoHubSettings', JSON.stringify(AppState.settings));
                 localStorage.setItem('ecoHubAchievements', JSON.stringify(AppState.achievements));
-            } catch (error) {
-                console.error("Failed to save state to localStorage:", error);
-                showToast("Could not save data. Your browser's storage might be full or in private mode.", "error");
+            } catch (err) {
+                console.error('Failed to save state:', err);
+                showToast("Could not save data. Browser storage may be full or disabled.", "error");
             }
-        };
-        
-        // --- CORE APPLICATION LOGIC ---
+        }
+
+        // --- Core logic ---
+        function calculateModalKwh() {
+            let totalKWh = 0;
+            const deviceBreakdown = {};
+            const deviceMap = getFullDeviceMap();
+
+            if (!DOM.deviceList) return { totalKWh: 0, deviceBreakdown };
+
+            DOM.deviceList.querySelectorAll('.device-row').forEach(row => {
+                const typeEl = row.querySelector('.device-type');
+                const countEl = row.querySelector('.device-count');
+                const hoursEl = row.querySelector('.device-hours');
+
+                if (!typeEl || !countEl || !hoursEl) return;
+
+                const type = typeEl.value;
+                const count = parseFloat(countEl.value) || 0;
+                const hours = parseFloat(hoursEl.value) || 0;
+                const watt = deviceMap[type] || 0;
+                const kwh = (watt * count * hours) / 1000;
+
+                totalKWh += kwh;
+                deviceBreakdown[type] = (deviceBreakdown[type] || 0) + kwh;
+            });
+
+            return { totalKWh, deviceBreakdown };
+        }
+
         function handleCalculation(e) {
             e.preventDefault();
             const { totalKWh, deviceBreakdown } = calculateModalKwh();
-            
-            const todayStr = new Date().toISOString().split('T')[0];
-            const todayEntryIndex = AppState.history.findIndex(entry => entry.date === todayStr);
 
-            if (todayEntryIndex > -1) {
-                AppState.history[todayEntryIndex] = { date: todayStr, kwh: totalKWh, breakdown: deviceBreakdown };
+            // Use YYYY-MM-DD date key
+            const todayStr = new Date().toISOString().split('T')[0];
+            const idx = AppState.history.findIndex(entry => entry.date === todayStr);
+
+            if (idx > -1) {
+                AppState.history[idx] = { date: todayStr, kwh: Number(totalKWh.toFixed(3)), breakdown: deviceBreakdown };
             } else {
-                AppState.history.push({ date: todayStr, kwh: totalKWh, breakdown: deviceBreakdown });
+                AppState.history.push({ date: todayStr, kwh: Number(totalKWh.toFixed(3)), breakdown: deviceBreakdown });
             }
-            
+
             checkAchievements();
             commitState();
             renderAll();
@@ -330,8 +293,9 @@
 
         function handleSetGoal() {
             const goalInput = document.getElementById('goal-input');
+            if (!goalInput) return showToast("Goal input is missing.", "error");
             const goalValue = parseFloat(goalInput.value);
-            if (!isNaN(goalValue) && goalValue > 0) {
+            if (isValidNumber(goalValue) && goalValue > 0) {
                 AppState.goal = goalValue;
                 checkAchievements();
                 commitState();
@@ -342,26 +306,37 @@
                 showToast("Please enter a valid, positive number.", "error");
             }
         }
-        
+
         function handleResetData() {
-            if (confirm("Are you sure? This will delete all your data permanently.")) {
-                localStorage.clear();
-                AppState.history = [];
-                AppState.goal = null;
-                AppState.achievements = [];
-                renderAll();
-                showToast("All data has been reset.", "info");
+            if (!confirm("Are you sure? This will delete all your data permanently.")) return;
+            try {
+                // Remove only keys this app uses instead of clearing all localStorage
+                localStorage.removeItem('ecoHubHistory');
+                localStorage.removeItem('ecoHubGoal');
+                localStorage.removeItem('ecoHubSettings');
+                localStorage.removeItem('ecoHubAchievements');
+            } catch (err) {
+                console.warn('Failed to remove keys from storage', err);
             }
+            AppState.history = [];
+            AppState.goal = null;
+            AppState.achievements = [];
+            // keep settings defaults or reset to defaults if you prefer:
+            AppState.settings = { costPerKwh: 8, co2PerKwh: 0.82, customDevices: {} };
+            renderAll();
+            showToast("All data has been reset.", "info");
         }
 
         function handleAddCustomDevice(e) {
             e.preventDefault();
             const nameInput = document.getElementById('custom-device-name');
             const wattageInput = document.getElementById('custom-device-wattage');
-            const name = nameInput.value.trim();
+            if (!nameInput || !wattageInput) return showToast("Custom device inputs missing.", "error");
+
+            const name = (nameInput.value || '').trim();
             const wattage = parseFloat(wattageInput.value);
 
-            if (name && !isNaN(wattage) && wattage > 0) {
+            if (name && isValidNumber(wattage) && wattage > 0) {
                 AppState.settings.customDevices[name] = wattage;
                 commitState();
                 renderAll();
@@ -372,75 +347,84 @@
                 showToast("Invalid device name or wattage.", "error");
             }
         }
-        
+
         function checkAchievements() {
             const newAchievements = [];
+            // FIRST_LOG
             if (AppState.history.length >= 1 && !AppState.achievements.includes('FIRST_LOG')) newAchievements.push('FIRST_LOG');
+            // GOAL_SET
             if (AppState.goal && !AppState.achievements.includes('GOAL_SET')) newAchievements.push('GOAL_SET');
-            
+
+            // STREAKS
             const streak = calculateStreak();
             if (streak >= 3 && !AppState.achievements.includes('STREAK_3')) newAchievements.push('STREAK_3');
             if (streak >= 7 && !AppState.achievements.includes('STREAK_7')) newAchievements.push('STREAK_7');
 
+            // SAVINGS
             const allTimeSavings = calculateAllTimeSavings();
             if (allTimeSavings >= 10 && !AppState.achievements.includes('SAVE_10_KWH')) newAchievements.push('SAVE_10_KWH');
             if (allTimeSavings >= 50 && !AppState.achievements.includes('SAVE_50_KWH')) newAchievements.push('SAVE_50_KWH');
-            
+
             if (newAchievements.length > 0) {
                 AppState.achievements.push(...newAchievements);
-                const latestAchievement = ACHIEVEMENT_DEFS[newAchievements[0]];
+                const latestId = newAchievements[0];
+                const latestAchievement = ACHIEVEMENT_DEFS[latestId];
                 showToast(`Achievement Unlocked: ${latestAchievement.title}!`, "achievement", latestAchievement.icon);
             }
         }
 
-        // --- UTILITY & HELPER FUNCTIONS ---
-        const getFullDeviceMap = () => ({
-            'Fan': 75, 'Light Bulb (LED)': 10, 'Projector': 300, 
-            'AC (1.5 Ton)': 1500, 'Computer': 250, 'Lift': 5000, 'Other': 100,
-            ...AppState.settings.customDevices
-        });
+        // --- Utilities: device map, streaks, savings ---
+        function getFullDeviceMap() {
+            return {
+                'Fan': 75, 'Light Bulb (LED)': 10, 'Projector': 300,
+                'AC (1.5 Ton)': 1500, 'Computer': 250, 'Lift': 5000, 'Other': 100,
+                ...AppState.settings.customDevices
+            };
+        }
 
-        const calculateStreak = () => {
-            if (AppState.history.length < 1) return 0;
+        function calculateStreak() {
+            if (!Array.isArray(AppState.history) || AppState.history.length === 0) return 0;
+            // Convert dates to midnight timestamps and sort descending
+            const sorted = AppState.history
+                .map(e => {
+                    const d = new Date(e.date);
+                    d.setHours(0,0,0,0);
+                    return d.getTime();
+                })
+                .sort((a,b)=> b - a);
+
+            const today = new Date(); today.setHours(0,0,0,0);
+            const todayTs = today.getTime();
             let streak = 0;
-            const sortedDates = AppState.history.map(e => new Date(e.date)).sort((a, b) => b - a);
-            
-            let today = new Date();
-            today.setHours(0,0,0,0);
-            
-            if(sortedDates[0].getTime() === today.getTime() || sortedDates[0].getTime() === today.getTime() - 86400000){
+
+            // If the latest is today or yesterday, start counting
+            if (sorted[0] === todayTs || sorted[0] === todayTs - 86400000) {
                 streak = 1;
-                for (let i = 0; i < sortedDates.length - 1; i++) {
-                    const diff = sortedDates[i].getTime() - sortedDates[i+1].getTime();
-                    if (diff === 86400000) streak++; else break;
+                for (let i = 0; i < sorted.length - 1; i++) {
+                    const diff = sorted[i] - sorted[i+1];
+                    if (diff === 86400000) streak++;
+                    else break;
                 }
             }
             return streak;
-        };
-        
-        const calculateAllTimeSavings = () => AppState.history.reduce((total, entry, index, arr) => {
-            if (index === 0) return 0;
-            const pastAvg = arr.slice(0, index).reduce((s, e) => s + e.kwh, 0) / index;
-            return total + Math.max(0, pastAvg - entry.kwh);
-        }, 0);
-
-        const calculateModalKwh = () => {
-            let totalKWh = 0;
-            const deviceBreakdown = {};
-            const deviceMap = getFullDeviceMap();
-            DOMElements.deviceList.querySelectorAll('.device-row').forEach(row => {
-                const type = row.querySelector('.device-type').value;
-                const count = parseFloat(row.querySelector('.device-count').value) || 0;
-                const hours = parseFloat(row.querySelector('.device-hours').value) || 0;
-                const kwh = (deviceMap[type] * count * hours) / 1000;
-                totalKWh += kwh;
-                deviceBreakdown[type] = (deviceBreakdown[type] || 0) + kwh;
-            });
-            return { totalKWh, deviceBreakdown };
         }
 
-        // --- DYNAMIC RENDERING & UI ---
-        const renderAll = () => {
+        function calculateAllTimeSavings() {
+            // For each logged entry after the first, compare to the average of previous entries.
+            if (!Array.isArray(AppState.history) || AppState.history.length < 2) return 0;
+            let total = 0;
+            for (let i = 1; i < AppState.history.length; i++) {
+                const prev = AppState.history.slice(0, i);
+                const sum = prev.reduce((s, e) => s + (Number(e.kwh) || 0), 0);
+                const avg = sum / prev.length;
+                const diff = Math.max(0, avg - (Number(AppState.history[i].kwh) || 0));
+                total += diff;
+            }
+            return total;
+        }
+
+        // --- Rendering ---
+        function renderAll() {
             renderDashboard();
             renderGoals();
             renderReports();
@@ -448,123 +432,100 @@
             renderSettings();
             renderChart();
             renderDevicePieChart();
-            renderCommunity();
-            renderEcoCoach();
-        };
-        
-        // Individual Render Functions
+        }
+
         function renderDashboard() {
             const todayStr = new Date().toISOString().split('T')[0];
             const todayEntry = AppState.history.find(e => e.date === todayStr);
-            let savedKWh = 0, subtitle = "Log today's usage to see your impact.";
+            let savedKWh = 0;
+            let subtitle = "Log today's usage to see your impact.";
 
             if (todayEntry) {
                 const pastEntries = AppState.history.filter(e => e.date !== todayStr);
-                let averageKWh = pastEntries.length > 0 ? pastEntries.reduce((s, e) => s + e.kwh, 0) / pastEntries.length : todayEntry.kwh * 1.15;
+                let averageKWh = pastEntries.length > 0 ? (pastEntries.reduce((s,e)=>s + Number(e.kwh || 0), 0) / pastEntries.length) : todayEntry.kwh * 1.15;
                 subtitle = pastEntries.length > 0 ? `Compared to your historical average of ${averageKWh.toFixed(2)} kWh/day.` : "Great start! This is your first logged day.";
                 savedKWh = Math.max(0, averageKWh - todayEntry.kwh);
             }
-            
-            document.getElementById('energy-saved-result').textContent = savedKWh.toFixed(2);
-            document.getElementById('money-saved-result').textContent = (savedKWh * AppState.settings.costPerKwh).toFixed(2);
-            document.getElementById('co2-reduced-result').textContent = (savedKWh * AppState.settings.co2PerKwh).toFixed(2);
-            document.getElementById('results-subtitle').textContent = subtitle;
 
-            document.getElementById('all-time-savings-stat').textContent = `${calculateAllTimeSavings().toFixed(2)} kWh`;
-            const bestDay = AppState.history.reduce((min, entry) => (entry.kwh < min.kwh ? entry : min), { kwh: Infinity });
-            document.getElementById('best-day-stat').textContent = bestDay.kwh === Infinity ? 'N/A' : `${bestDay.kwh.toFixed(2)} kWh`;
-            document.getElementById('streak-stat').textContent = calculateStreak();
+            const energyElem = document.getElementById('energy-saved-result');
+            const moneyElem = document.getElementById('money-saved-result');
+            const co2Elem = document.getElementById('co2-reduced-result');
+            const subtitleEl = document.getElementById('results-subtitle');
+
+            if (energyElem) energyElem.textContent = savedKWh.toFixed(2);
+            if (moneyElem) moneyElem.textContent = (savedKWh * AppState.settings.costPerKwh).toFixed(2);
+            if (co2Elem) co2Elem.textContent = (savedKWh * AppState.settings.co2PerKwh).toFixed(2);
+            if (subtitleEl) subtitleEl.textContent = subtitle;
+
+            // Quick Stats
+            const allTimeElem = document.getElementById('all-time-savings-stat');
+            const bestDayElem = document.getElementById('best-day-stat');
+            const streakElem = document.getElementById('streak-stat');
+
+            if (allTimeElem) allTimeElem.textContent = `${calculateAllTimeSavings().toFixed(2)} kWh`;
+            if (bestDayElem) {
+                const best = AppState.history.reduce((min, entry) => (entry.kwh < min.kwh ? entry : min), { kwh: Infinity });
+                bestDayElem.textContent = best.kwh === Infinity ? 'N/A' : `${Number(best.kwh).toFixed(2)} kWh`;
+            }
+            if (streakElem) streakElem.textContent = calculateStreak();
         }
 
         function renderGoals() {
             const goal = AppState.goal;
-            const goalTargetSum = document.getElementById('goal-target-summary'), goalBarSum = document.getElementById('goal-progress-bar-summary'), goalStatusSum = document.getElementById('goal-status-summary');
-            const goalTargetDet = document.getElementById('goal-target-detail'), goalUsedDet = document.getElementById('goal-used-detail'), goalBarDet = document.getElementById('goal-progress-bar-detail'), goalStatusDet = document.getElementById('goal-status-detail');
-            
-            if (goal) {
+            const goalTargetSum = document.getElementById('goal-target-summary');
+            const goalBarSum = document.getElementById('goal-progress-bar-summary');
+            const goalStatusSum = document.getElementById('goal-status-summary');
+
+            const goalTargetDet = document.getElementById('goal-target-detail');
+            const goalUsedDet = document.getElementById('goal-used-detail');
+            const goalBarDet = document.getElementById('goal-progress-bar-detail');
+            const goalStatusDet = document.getElementById('goal-status-detail');
+
+            if (goal && isValidNumber(goal)) {
                 const now = new Date();
                 const startOfWeek = new Date(now);
-                startOfWeek.setDate(now.getDate() - (now.getDay() + 6) % 7);
-                startOfWeek.setHours(0, 0, 0, 0);
+                const diffToMonday = (now.getDay() + 6) % 7; // Monday as start
+                startOfWeek.setDate(now.getDate() - diffToMonday);
+                startOfWeek.setHours(0,0,0,0);
 
-                const usedThisWeek = AppState.history.filter(e => new Date(e.date) >= startOfWeek).reduce((sum, e) => sum + e.kwh, 0);
+                const usedThisWeek = AppState.history.filter(e => new Date(e.date) >= startOfWeek).reduce((sum, e) => sum + Number(e.kwh || 0), 0);
                 const progress = Math.min(100, (usedThisWeek / goal) * 100);
 
-                [goalTargetSum, goalTargetDet].forEach(el => el.textContent = `${goal} kWh`);
-                [goalBarSum, goalBarDet].forEach(el => { el.style.width = `${progress}%`; if (el.id.includes('detail')) el.textContent = `${Math.round(progress)}%`; });
-                goalStatusSum.textContent = `Used ${usedThisWeek.toFixed(2)} of ${goal} kWh this week.`;
-                goalUsedDet.textContent = `${usedThisWeek.toFixed(2)} kWh`;
-                goalStatusDet.textContent = `You've used ${Math.round(progress)}% of your weekly budget.`;
+                if (goalTargetSum) goalTargetSum.textContent = `${goal} kWh`;
+                if (goalTargetDet) goalTargetDet.textContent = `${goal} kWh`;
+
+                if (goalBarSum) goalBarSum.style.width = `${progress}%`;
+                if (goalBarDet) { goalBarDet.style.width = `${progress}%`; goalBarDet.textContent = `${Math.round(progress)}%`; }
+
+                if (goalStatusSum) goalStatusSum.textContent = `Used ${usedThisWeek.toFixed(2)} of ${goal} kWh this week.`;
+                if (goalUsedDet) goalUsedDet.textContent = `${usedThisWeek.toFixed(2)} kWh`;
+                if (goalStatusDet) goalStatusDet.textContent = `You've used ${Math.round(progress)}% of your weekly budget.`;
             } else {
-                [goalTargetSum, goalTargetDet].forEach(el => el.textContent = 'Not set');
-                [goalBarSum, goalBarDet].forEach(el => { el.style.width = '0%'; if (el.id.includes('detail')) el.textContent = '0%'; });
-                [goalStatusSum, goalStatusDet].forEach(el => el.textContent = "Set a goal to start tracking.");
+                if (goalTargetSum) goalTargetSum.textContent = 'Not set';
+                if (goalTargetDet) goalTargetDet.textContent = 'Not set';
+                if (goalBarSum) goalBarSum.style.width = '0%';
+                if (goalBarDet) { goalBarDet.style.width = '0%'; goalBarDet.textContent = '0%'; }
+                if (goalStatusSum) goalStatusSum.textContent = 'Set a goal to start tracking.';
+                if (goalStatusDet) goalStatusDet.textContent = 'Set a goal to begin.';
+                if (goalUsedDet) goalUsedDet.textContent = `0.00 kWh`;
             }
-        }
-        
-        function renderCommunity() {
-            // Simulated community data
-            const communitySavings = AppState.history.reduce((sum, e) => sum + e.kwh, 0) * 15; // Simulate a larger community
-            const communityGoal = 1000;
-            const progress = Math.min(100, (communitySavings / communityGoal) * 100);
-            document.getElementById('community-goal-progress-bar').style.width = `${progress}%`;
-            document.getElementById('community-goal-progress-bar').textContent = `${Math.round(progress)}%`;
-            document.getElementById('community-goal-status').textContent = `We've collectively saved ${communitySavings.toFixed(2)} kWh so far!`;
-
-            // Simulated leaderboard
-            const leaderboardContainer = document.getElementById('leaderboard-container');
-            const yourWeeklySavings = AppState.history.filter(e => new Date(e.date) >= new Date(new Date().setDate(new Date().getDate() - 7))).reduce((sum, e) => sum + e.kwh, 0);
-            const leaderboardData = [
-                { name: 'User A', savings: (yourWeeklySavings * 1.8).toFixed(2) },
-                { name: 'User B', savings: (yourWeeklySavings * 1.5).toFixed(2) },
-                { name: 'You', savings: yourWeeklySavings.toFixed(2) },
-                { name: 'User C', savings: (yourWeeklySavings * 0.9).toFixed(2) },
-                { name: 'User D', savings: (yourWeeklySavings * 0.7).toFixed(2) },
-            ].sort((a, b) => b.savings - a.savings);
-            
-            leaderboardContainer.innerHTML = leaderboardData.map((user, index) => `
-                <div class="flex items-center justify-between p-2 rounded-lg ${user.name === 'You' ? 'bg-blue-100' : ''}">
-                    <span class="font-semibold">${index + 1}. ${user.name}</span>
-                    <span class="font-bold text-blue-600">${user.savings} kWh saved</span>
-                </div>
-            `).join('');
-        }
-
-        function renderEcoCoach() {
-            const tipEl = document.getElementById('eco-coach-tip');
-            const summaryEl = document.getElementById('eco-coach-summary');
-            const factEl = document.getElementById('eco-coach-fact');
-            const latestEntry = AppState.history[AppState.history.length - 1];
-
-            if (latestEntry && latestEntry.breakdown) {
-                const topDevice = Object.entries(latestEntry.breakdown).sort((a,b) => b[1] - a[1])[0][0];
-                tipEl.textContent = ECO_COACH_TIPS[topDevice] || ECO_COACH_TIPS['DEFAULT'];
-            }
-            
-            const weeklyHistory = AppState.history.slice(-7);
-            if (weeklyHistory.length >= 2) {
-                const avg = weeklyHistory.reduce((s,e) => s + e.kwh, 0) / weeklyHistory.length;
-                const trend = weeklyHistory[weeklyHistory.length-1].kwh - weeklyHistory[0].kwh;
-                summaryEl.textContent = `Your average usage this week was ${avg.toFixed(2)} kWh/day. Your consumption trend is ${trend > 0 ? 'increasing' : 'decreasing'}. Keep up the great work!`;
-            }
-
-            factEl.textContent = ECO_COACH_FACTS[new Date().getDate() % ECO_COACH_FACTS.length];
         }
 
         function renderReports() {
-            const tableContainer = document.getElementById('history-table-container');
+            if (!DOM.historyContainer) return;
             if (AppState.history.length > 0) {
-                tableContainer.innerHTML = `<table class="w-full text-left"><thead class="sticky top-0 bg-white/80 backdrop-blur-sm"><tr><th class="p-3">Date</th><th class="p-3">Consumption (kWh)</th></tr></thead><tbody>${AppState.history.slice().reverse().map(entry => `<tr class="border-b border-gray-200"><td class="p-3">${new Date(entry.date).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}</td><td class="p-3 font-semibold">${entry.kwh.toFixed(2)}</td></tr>`).join('')}</tbody></table>`;
+                DOM.historyContainer.innerHTML = `<table class="w-full text-left"><thead class="sticky top-0 bg-white/80 backdrop-blur-sm"><tr><th class="p-3">Date</th><th class="p-3">Consumption (kWh)</th></tr></thead><tbody>${AppState.history.slice().reverse().map(entry => `<tr class="border-b border-gray-200"><td class="p-3">${new Date(entry.date).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}</td><td class="p-3 font-semibold">${Number(entry.kwh).toFixed(2)}</td></tr>`).join('')}</tbody></table>`;
             } else {
-                tableContainer.innerHTML = '<p class="text-center p-6 text-gray-500">No data logged yet.</p>';
+                DOM.historyContainer.innerHTML = '<p class="text-center p-6 text-gray-500">No data logged yet.</p>';
             }
         }
-        
+
         function renderAchievements() {
             const grid = document.getElementById('achievements-grid');
+            if (!grid) return;
             grid.innerHTML = Object.values(ACHIEVEMENT_DEFS).map(ach => `
                 <div class="text-center p-4 rounded-xl ${AppState.achievements.includes(ach.id) ? 'bg-green-100' : 'bg-gray-100 opacity-60'}">
-                    <i class="ph-bold ${ach.icon} text-4xl ${AppState.achievements.includes(ach.id) ? 'text-green-500' : 'text-gray-400'}"></i>
+                    <i class="${ach.icon} text-4xl ${AppState.achievements.includes(ach.id) ? 'text-green-500' : 'text-gray-400'}"></i>
                     <h4 class="font-bold mt-2">${ach.title}</h4>
                     <p class="text-xs text-gray-600">${ach.desc}</p>
                 </div>
@@ -572,154 +533,261 @@
         }
 
         function renderSettings() {
-            document.getElementById('setting-cost').value = AppState.settings.costPerKwh;
-            document.getElementById('setting-co2').value = AppState.settings.co2PerKwh;
+            const cost = document.getElementById('setting-cost');
+            const co2 = document.getElementById('setting-co2');
+            if (cost) cost.value = AppState.settings.costPerKwh;
+            if (co2) co2.value = AppState.settings.co2PerKwh;
+
             const customList = document.getElementById('custom-device-list');
+            if (!customList) return;
             customList.innerHTML = Object.entries(AppState.settings.customDevices).map(([name, wattage]) => `
                 <div class="flex justify-between items-center bg-gray-100 p-2 rounded-lg">
                     <span><strong>${name}</strong>: ${wattage}W</span>
-                    <button data-name="${name}" class="remove-custom-device-btn text-red-500 hover:text-red-700 text-xl font-bold">&times;</button>
+                    <button data-name="${name}" class="remove-custom-device-btn text-red-500 hover:text-red-700">&times;</button>
                 </div>
             `).join('');
         }
-        
+
+        // Charts: safe creation with try/catch and data checks
         function renderChart() {
-            const history = AppState.history.slice(-7);
-            if(energyChart) energyChart.destroy();
-            energyChart = new Chart(document.getElementById('energy-chart'), {
-                type: 'line', data: { labels: history.map(e => new Date(e.date).toLocaleDateString('en-IN', { month: 'short', day: 'numeric' })), datasets: [{ label: 'kWh Usage', data: history.map(e => e.kwh), backgroundColor: 'rgba(37, 99, 235, 0.1)', borderColor: 'rgba(37, 99, 235, 1)', borderWidth: 2, fill: true, tension: 0.4 }] },
-                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true }, x: { grid: { display: false } } }, plugins: { legend: { display: false } } }
-            });
-        }
-        
-        function renderDevicePieChart() {
-            const latestEntry = AppState.history[AppState.history.length - 1];
-            if(devicePieChart) devicePieChart.destroy();
-            const canvas = document.getElementById('device-pie-chart');
-            if (latestEntry && latestEntry.breakdown && Object.keys(latestEntry.breakdown).length > 0) {
-                 devicePieChart = new Chart(canvas, {
-                    type: 'doughnut',
-                    data: { labels: Object.keys(latestEntry.breakdown), datasets: [{ data: Object.values(latestEntry.breakdown) }] },
-                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+            try {
+                const history = AppState.history.slice(-7);
+                const ctx = DOM.energyCanvas && DOM.energyCanvas.getContext ? DOM.energyCanvas.getContext('2d') : null;
+                if (energyChart) { try { energyChart.destroy(); } catch (e) {} energyChart = null; }
+                if (!ctx) return;
+
+                const labels = history.map(e => new Date(e.date).toLocaleDateString('en-IN', { month: 'short', day: 'numeric' }));
+                const data = history.map(e => Number(e.kwh) || 0);
+
+                energyChart = new Chart(DOM.energyCanvas, {
+                    type: 'line',
+                    data: { labels, datasets: [{ label: 'kWh Usage', data, backgroundColor: 'rgba(37, 99, 235, 0.1)', borderColor: 'rgba(37, 99, 235, 1)', borderWidth: 2, fill: true, tension: 0.4 }] },
+                    options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true }, x: { grid: { display: false } } }, plugins: { legend: { display: false } } }
                 });
-            } else {
-                 const ctx = canvas.getContext('2d');
-                 ctx.clearRect(0,0,canvas.width,canvas.height);
-                 ctx.textAlign = 'center';
-                 ctx.fillText('Log usage to see breakdown', canvas.width/2, canvas.height/2);
+            } catch (err) {
+                console.error('Failed to render energy chart', err);
             }
         }
-        
-        // --- EVENT HANDLERS ---
-        function setupEventListeners() {
-            DOMElements.tabs.forEach(tab => tab.addEventListener('click', () => switchTab(tab.dataset.tab)));
-            DOMElements.openModalBtn.addEventListener('click', openModal);
-            DOMElements.closeModalBtn.addEventListener('click', closeModal);
-            DOMElements.modalOverlay.addEventListener('click', (e) => { if (e.target === DOMElements.modalOverlay) closeModal(); });
-            DOMElements.addDeviceBtn.addEventListener('click', addDeviceRow);
-            DOMElements.deviceForm.addEventListener('submit', handleCalculation);
-            document.getElementById('set-goal-btn').addEventListener('click', handleSetGoal);
-            document.getElementById('add-device-form').addEventListener('submit', handleAddCustomDevice);
-            
-            document.getElementById('settings-tab').addEventListener('click', e => {
-                if(e.target.matches('.remove-custom-device-btn')) {
-                    delete AppState.settings.customDevices[e.target.dataset.name];
-                    commitState(); renderAll();
+
+        function renderDevicePieChart() {
+            try {
+                const latestEntry = AppState.history[AppState.history.length - 1];
+                if (devicePieChart) { try { devicePieChart.destroy(); } catch (e) {} devicePieChart = null; }
+                const canvas = DOM.devicePieCanvas;
+                if (!canvas || !canvas.getContext) return;
+
+                if (latestEntry && latestEntry.breakdown && Object.keys(latestEntry.breakdown).length > 0) {
+                    devicePieChart = new Chart(canvas, {
+                        type: 'doughnut',
+                        data: { labels: Object.keys(latestEntry.breakdown), datasets: [{ data: Object.values(latestEntry.breakdown) }] },
+                        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+                    });
+                } else {
+                    const ctx = canvas.getContext('2d');
+                    ctx.clearRect(0,0,canvas.width,canvas.height);
+                    ctx.save();
+                    ctx.textAlign = 'center';
+                    ctx.font = '14px Poppins, sans-serif';
+                    ctx.fillStyle = '#6b7280';
+                    ctx.fillText('Log usage to see breakdown', canvas.width/2, canvas.height/2);
+                    ctx.restore();
                 }
-            });
-            document.getElementById('settings-tab').addEventListener('change', e => {
-                if(e.target.id === 'setting-cost') AppState.settings.costPerKwh = parseFloat(e.target.value) || 8;
-                if(e.target.id === 'setting-co2') AppState.settings.co2PerKwh = parseFloat(e.target.value) || 0.82;
-                commitState(); renderAll();
+            } catch (err) {
+                console.error('Failed to render device pie chart', err);
+            }
+        }
+
+        // --- Event wiring ---
+        function setupEventListeners() {
+            // Tabs
+            DOM.tabs.forEach(tab => tab.addEventListener('click', () => switchTab(tab.dataset.tab)));
+
+            // Modal open/close
+            if (DOM.openModalBtn) DOM.openModalBtn.addEventListener('click', openModal);
+            if (DOM.closeModalBtn) DOM.closeModalBtn.addEventListener('click', closeModal);
+
+            // click outside to close
+            if (DOM.modalOverlay) DOM.modalOverlay.addEventListener('click', (e) => {
+                if (e.target === DOM.modalOverlay) closeModal();
             });
 
-            DOMElements.deviceList.addEventListener('input', () => {
-                const { totalKWh } = calculateModalKwh();
-                DOMElements.modalKwhTotal.textContent = totalKWh.toFixed(2);
-                DOMElements.saveLogBtn.disabled = totalKWh <= 0;
-            });
-            
-             document.getElementById('reset-data-btn').addEventListener('click', handleResetData);
-             document.getElementById('export-csv-btn').addEventListener('click', exportCSV);
+            // ESC key to close modal
+            window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
+            // modal device ops
+            if (DOM.addDeviceBtn) DOM.addDeviceBtn.addEventListener('click', addDeviceRow);
+            if (DOM.deviceForm) DOM.deviceForm.addEventListener('submit', handleCalculation);
+
+            // Goals, custom device, settings, export, reset
+            const setGoalBtn = document.getElementById('set-goal-btn');
+            if (setGoalBtn) setGoalBtn.addEventListener('click', handleSetGoal);
+
+            const addDeviceForm = document.getElementById('add-device-form');
+            if (addDeviceForm) addDeviceForm.addEventListener('submit', handleAddCustomDevice);
+
+            const settingsTab = document.getElementById('settings-tab');
+            if (settingsTab) {
+                settingsTab.addEventListener('click', e => {
+                    if (e.target.matches('.remove-custom-device-btn')) {
+                        const name = e.target.dataset.name;
+                        if (name && AppState.settings.customDevices[name]) {
+                            delete AppState.settings.customDevices[name];
+                            commitState();
+                            renderAll();
+                        }
+                    }
+                });
+
+                settingsTab.addEventListener('change', e => {
+                    if (e.target.id === 'setting-cost') AppState.settings.costPerKwh = parseFloat(e.target.value) || 8;
+                    if (e.target.id === 'setting-co2') AppState.settings.co2PerKwh = parseFloat(e.target.value) || 0.82;
+                    commitState(); renderAll();
+                });
+            }
+
+            // Recalculate modal totals when device list changes (event delegation)
+            if (DOM.deviceList) {
+                DOM.deviceList.addEventListener('change', () => {
+                    const { totalKWh } = calculateModalKwh();
+                    if (DOM.modalKwhTotal) DOM.modalKwhTotal.textContent = totalKWh.toFixed(2);
+                    if (DOM.saveLogBtn) DOM.saveLogBtn.disabled = !(totalKWh > 0);
+                });
+            }
+
+            const resetBtn = document.getElementById('reset-data-btn');
+            if (resetBtn) resetBtn.addEventListener('click', handleResetData);
+
+            const exportBtn = document.getElementById('export-csv-btn');
+            if (exportBtn) exportBtn.addEventListener('click', exportCSV);
         }
-        
+
         function switchTab(activeTab) {
-            DOMElements.tabs.forEach(tab => tab.classList.toggle('active', tab.dataset.tab === activeTab));
-            DOMElements.tabContents.forEach(content => content.classList.toggle('active', content.id === `${activeTab}-tab`));
+            DOM.tabs.forEach(tab => tab.classList.toggle('active', tab.dataset.tab === activeTab));
+            DOM.tabContents.forEach(content => content.classList.toggle('active', content.id === `${activeTab}-tab`));
         }
-        
+
         function openModal() {
-            DOMElements.modal.classList.remove('hidden');
+            if (!DOM.modal || !DOM.modalContent) return;
+            DOM.modal.classList.remove('hidden');
+            // Ensure form starts with at least one device row
+            if (DOM.deviceList && DOM.deviceList.childElementCount === 0) addDeviceRow();
             setTimeout(() => {
-                DOMElements.modalOverlay.classList.remove('opacity-0');
-                DOMElements.modalContent.classList.remove('opacity-0', 'scale-95');
+                DOM.modal.classList.remove('opacity-0');
+                DOM.modalContent.classList.remove('opacity-0', 'scale-95');
+                DOM.toast && (DOM.toast.style.display = DOM.toast.style.display || 'none'); // keep toast unaffected
             }, 10);
         }
 
         function closeModal() {
-            DOMElements.modalOverlay.classList.add('opacity-0');
-            DOMElements.modalContent.classList.add('opacity-0', 'scale-95');
+            if (!DOM.modal || !DOM.modalContent) return;
+            DOM.modal.classList.add('opacity-0');
+            DOM.modalContent.classList.add('opacity-0', 'scale-95');
             setTimeout(() => {
-                DOMElements.modal.classList.add('hidden');
-                DOMElements.deviceList.innerHTML = '';
-                addDeviceRow();
-            }, 300);
+                DOM.modal.classList.add('hidden');
+                if (DOM.deviceList) {
+                    DOM.deviceList.innerHTML = '';
+                    addDeviceRow();
+                    DOM.deviceList.dispatchEvent(new Event('change'));
+                }
+            }, 250);
         }
 
         function addDeviceRow() {
+            if (!DOM.deviceList) return;
             const row = document.createElement('div');
             const deviceMap = getFullDeviceMap();
             row.className = 'device-row grid grid-cols-4 gap-2 items-center fade-in-up';
-            row.innerHTML = `<select class="device-type col-span-2 w-full p-2 bg-white/80 border border-gray-300 rounded-md text-sm">${Object.keys(deviceMap).map(d => `<option value="${d}">${d}</option>`).join('')}</select><input type="number" class="device-count w-full p-2 bg-white/80 border border-gray-300 rounded-md text-sm" placeholder="Qty" min="1" value="1"><div class="flex items-center"><input type="number" class="device-hours w-full p-2 bg-white/80 border border-gray-300 rounded-md text-sm" placeholder="Hrs" min="0" step="0.1" required><button type="button" class="remove-device-btn text-red-500 hover:text-red-700 p-1 ml-1"><i class="ph-bold ph-trash"></i></button></div>`;
-            DOMElements.deviceList.appendChild(row);
-            row.querySelector('.remove-device-btn').addEventListener('click', () => {
+            row.innerHTML = `
+                <select class="device-type col-span-2 w-full p-2 bg-white/80 border border-gray-300 rounded-md text-sm">${Object.keys(deviceMap).map(d => `<option value="${escapeHtml(d)}">${escapeHtml(d)}</option>`).join('')}</select>
+                <input type="number" class="device-count w-full p-2 bg-white/80 border border-gray-300 rounded-md text-sm" placeholder="Qty" min="1" value="1">
+                <div class="flex items-center gap-1">
+                    <input type="number" class="device-hours w-full p-2 bg-white/80 border border-gray-300 rounded-md text-sm" placeholder="Hrs" min="0" step="0.1" required>
+                    <button type="button" class="remove-device-btn text-red-500 hover:text-red-700 p-1"><i class="ph-bold ph-trash"></i></button>
+                </div>
+            `;
+            DOM.deviceList.appendChild(row);
+
+            // remove handler
+            const removeBtn = row.querySelector('.remove-device-btn');
+            if (removeBtn) removeBtn.addEventListener('click', () => {
                 row.remove();
-                DOMElements.deviceList.dispatchEvent(new Event('input'));
+                DOM.deviceList.dispatchEvent(new Event('change'));
             });
-            DOMElements.deviceList.dispatchEvent(new Event('input'));
+
+            // trigger a change to recalc totals
+            DOM.deviceList.dispatchEvent(new Event('change'));
         }
 
-        function showToast(message, type = "info", iconClass = "ph-info") {
-            const toast = document.getElementById('toast');
-            const toastIcon = document.getElementById('toast-icon');
-            document.getElementById('toast-message').textContent = message;
-
-            toastIcon.className = `ph-bold text-2xl ${
-                type === 'success' ? 'ph-check-circle text-green-400' : 
-                type === 'error' ? 'ph-x-circle text-red-400' :
-                type === 'achievement' ? `${iconClass} text-yellow-400` :
-                'ph-info text-blue-400'
-            }`;
-
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 4000);
+        // Escape HTML helper for safety in templates
+        function escapeHtml(str) {
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
         }
-        
+
+        // Toast utility
+        let toastTimer = null;
+        function showToast(message, type = "info", iconClass = "ph-bold ph-info") {
+            if (!DOM.toast || !DOM.toastIcon || !DOM.toastMessage) return console.warn('Toast elements missing');
+            DOM.toastMessage.textContent = message;
+
+            // Build icon class safely
+            const iconClassMap = {
+                success: 'ph-bold ph-check-circle text-green-400',
+                error: 'ph-bold ph-x-circle text-red-400',
+                achievement: (iconClass || 'ph-bold ph-trophy') + ' text-yellow-400',
+                info: 'ph-bold ph-info text-blue-400',
+                warn: 'ph-bold ph-warning'
+            };
+
+            DOM.toastIcon.className = iconClassMap[type] || iconClassMap.info;
+
+            DOM.toast.style.display = 'flex';
+            DOM.toast.classList.add('show');
+
+            if (toastTimer) clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                DOM.toast.classList.remove('show');
+                // hide after animation
+                setTimeout(() => { DOM.toast.style.display = 'none'; }, 300);
+            }, 4000);
+        }
+
+        // Export CSV using Blob for reliability
         function exportCSV() {
-            if (AppState.history.length === 0) {
+            if (!Array.isArray(AppState.history) || AppState.history.length === 0) {
                 showToast("No data to export.", "info");
                 return;
             }
-            let csvContent = "data:text/csv;charset=utf-8,Date,Consumption (kWh)\n";
-            AppState.history.forEach(row => {
-                csvContent += `${row.date},${row.kwh}\n`;
-            });
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "ecohub_history.csv");
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+
+            const rows = [
+                ['Date', 'Consumption (kWh)'],
+                ...AppState.history.map(r => [r.date, Number(r.kwh).toFixed(3)])
+            ];
+            const csv = rows.map(r => r.map(cell => `"${String(cell).replace(/"/g,'""')}"`).join(',')).join('\n');
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'ecohub_history.csv';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+            showToast('CSV exported.', 'success');
         }
 
-        // --- APPLICATION ENTRY POINT ---
+        // --- App entrypoint ---
         loadState();
         setupEventListeners();
+        // ensure at least one device row exists when page loads
+        if (DOM.deviceList && DOM.deviceList.childElementCount === 0) addDeviceRow();
         renderAll();
     });
 })();
 </script>
 </body>
 </html>
-
