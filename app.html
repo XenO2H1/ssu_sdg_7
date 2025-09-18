@@ -56,10 +56,10 @@
         <!-- Header -->
         <header class="mb-8">
             <div class="max-w-7xl mx-auto flex justify-between items-center">
-                <div class="flex items-center gap-3">
-                    <i class="ph-bold ph-leaf text-4xl text-green-600"></i>
-                    <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">EcoTrack</h1>
-                </div>
+                <a href="index.html" class="flex items-center gap-3 group">
+                    <i class="ph-bold ph-leaf text-4xl text-green-600 group-hover:animate-spin" style="animation-duration: 2s;"></i>
+                    <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 group-hover:text-green-600 transition-colors">EcoTrack</h1>
+                </a>
                 <div id="user-info" class="text-right">
                     <p class="font-semibold text-gray-700">Welcome, <span id="username-display">Guest</span>!</p>
                     <button id="logout-btn" class="hidden text-sm text-red-500 hover:underline">Log Out</button>
@@ -471,4 +471,3 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
-
