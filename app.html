@@ -57,6 +57,25 @@
         </header>
 
         <main class="max-w-xl mx-auto space-y-8">
+            <!-- About EcoTrack Section -->
+            <section id="about-section" class="card p-6 fade-in bg-gray-50">
+                <h2 class="text-xl font-bold text-gray-800 mb-3 flex items-center gap-2">
+                    <i class="ph-bold ph-info text-emerald-600"></i>
+                    What is EcoTrack?
+                </h2>
+                <p class="text-gray-600">
+                    EcoTrack is your personal energy conservation assistant. By logging the devices you use each day, this calculator helps you visualize your energy savings in three key areas:
+                </p>
+                <ul class="list-disc list-inside text-gray-600 mt-3 space-y-1">
+                    <li><span class="font-semibold">Energy Saved (kWh):</span> See the direct reduction in your electricity consumption.</li>
+                    <li><span class="font-semibold">Money Saved (₹):</span> Understand the financial benefits of being energy efficient.</li>
+                    <li><span class="font-semibold">CO₂ Reduction (kg):</span> Track your contribution to fighting climate change.</li>
+                </ul>
+                <p class="text-gray-600 mt-3">
+                    Every watt saved is a step towards achieving SDG 7: Affordable and Clean Energy for all.
+                </p>
+            </section>
+
             <!-- Device Usage Input Card -->
             <section id="input-section" class="card p-6 fade-in">
                 <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
@@ -128,12 +147,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- APP STATE & CONSTANTS ---
     const WATTAGE_MAP = {
-        'Fan': 25,
-        'Light Bulb (LED)': 9,
-        'Projector': 50,
+        'Fan': 75,
+        'Light Bulb (LED)': 10,
+        'Projector': 300,
         'AC (1.5 Ton)': 1500,
-        'Computer': 200,
-        'Lift': 7000, // Using an average value
+        'Computer': 250,
+        'Lift': 5000,
         'Other': 100
     };
     const COST_PER_KWH = 8; // in ₹
@@ -144,14 +163,16 @@ document.addEventListener('DOMContentLoaded', () => {
         addDeviceRow(); // Add one device row by default
     }
 
-    // --- DYNAMIC FORM LOGIC ---
+    // --- EVENT LISTENERS ---
     addDeviceBtn.addEventListener('click', addDeviceRow);
+    deviceForm.addEventListener('submit', handleCalculation);
+    // Use event delegation for remove buttons
+    deviceList.addEventListener('click', handleDeviceListClick);
 
+    // --- DYNAMIC FORM LOGIC ---
     function addDeviceRow() {
-        const deviceId = Date.now(); // Unique ID for the row
         const row = document.createElement('div');
         row.className = 'device-row grid grid-cols-4 gap-2 items-center mb-2 fade-in';
-        row.dataset.id = deviceId;
 
         const selectOptions = Object.keys(WATTAGE_MAP).map(device => `<option value="${device}">${device}</option>`).join('');
 
@@ -162,7 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <input type="number" class="device-count w-full p-2 border border-gray-300 rounded-md" placeholder="Qty" min="1" value="1">
             <div class="flex items-center">
                 <input type="number" class="device-hours w-full p-2 border border-gray-300 rounded-md" placeholder="Hrs" min="0" step="0.1" required>
-                <button type="button" class="remove-device-btn text-red-500 hover:text-red-700 p-1" onclick="removeDeviceRow(${deviceId})">
+                <button type="button" class="remove-device-btn text-red-500 hover:text-red-700 p-1 ml-1">
                     <i class="ph-bold ph-trash text-xl"></i>
                 </button>
             </div>
@@ -170,20 +191,33 @@ document.addEventListener('DOMContentLoaded', () => {
         deviceList.appendChild(row);
     }
     
-    // Make remove function global to be accessible from inline onclick
-    window.removeDeviceRow = function(id) {
-        const rowToRemove = document.querySelector(`.device-row[data-id='${id}']`);
-        if(rowToRemove) {
-            rowToRemove.remove();
+    function handleDeviceListClick(e) {
+        // Find the closest remove button to where the user clicked
+        const removeBtn = e.target.closest('.remove-device-btn');
+        if (removeBtn) {
+            const rowToRemove = removeBtn.closest('.device-row');
+            if (rowToRemove) {
+                rowToRemove.remove();
+            }
+            // If it was the last device row, add a new one to prevent an empty form
+            if (deviceList.children.length === 0) {
+                addDeviceRow();
+            }
         }
     }
 
     // --- CALCULATION LOGIC ---
-    deviceForm.addEventListener('submit', (e) => {
+    function handleCalculation(e) {
         e.preventDefault();
         
         let totalKWhToday = 0;
         const deviceRows = document.querySelectorAll('.device-row');
+
+        if (deviceRows.length === 0) {
+            // Should not happen due to the fix in handleDeviceListClick, but good to have as a fallback.
+            alert("Please add at least one device.");
+            return;
+        }
 
         deviceRows.forEach(row => {
             const type = row.querySelector('.device-type').value;
@@ -208,7 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Save today's usage as yesterday's for the next calculation
         localStorage.setItem('yesterdayKWh', totalKWhToday.toFixed(2));
-    });
+    }
     
     // --- UI UPDATES ---
     function updateResults(kwh, money, co2) {
