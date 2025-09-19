@@ -3,668 +3,540 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Green India Energy Saver | Educational Dashboard</title>
+    <title>EcoTrack - Energy Savings Dashboard</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js for graphs -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'eco-green': '#10b981',
-                        'eco-blue': '#06b6d4',
-                        'eco-yellow': '#f59e0b',
-                        'eco-purple': '#8b5cf6',
-                        'eco-dark': '#1f2937',
-                    }
-                }
-            }
-        }
-    </script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-        .card-hover { transition: all 0.3s ease; }
-        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
-        .fade-in { animation: fadeIn 0.5s ease-in; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .progress-ring {
-            transform: rotate(-90deg);
+        /* Custom styles to enhance the UI */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8; /* Light blue-gray background */
         }
-        .device-icon {
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 12px;
-            background: #f0fdf4;
-            color: #10b981;
-            font-size: 24px;
+        .card {
+            background-color: white;
+            border-radius: 1rem; /* Softer rounded corners */
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: all 0.3s ease;
         }
-        #toast-notification {
-            transition: opacity 0.5s, transform 0.5s;
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .btn-primary {
+            background-color: #22c55e; /* Vibrant green */
+            color: white;
+            font-weight: 600;
+            border-radius: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            transition: background-color 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #16a34a; /* Darker green on hover */
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
-<body class="bg-gray-50 text-eco-dark min-h-screen">
-    <!-- Header -->
-    <header class="bg-white shadow-sm">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="flex items-center">
-                <div class="w-10 h-10 rounded-full bg-eco-green flex items-center justify-center text-white mr-3">
-                    <i class="fas fa-leaf"></i>
-                </div>
-                <h1 class="text-xl font-bold text-eco-green">Green India Energy Saver</h1>
-            </div>
-            <div class="flex items-center space-x-4">
-                <div class="hidden md:flex items-center space-x-2 bg-eco-green/10 px-3 py-1 rounded-full">
-                    <span class="text-eco-green font-medium">Eco-Score: 245</span>
-                    <i class="fas fa-trophy text-eco-yellow"></i>
-                </div>
-                <button class="bg-eco-green text-white px-4 py-2 rounded-lg font-medium hover:bg-green-600 transition">
-                    <i class="fas fa-user mr-2"></i>Student Login
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <main class="container mx-auto px-4 py-8">
-        <div class="text-center mb-12">
-            <h2 class="text-4xl font-bold text-eco-dark mb-4">Energy Savings Calculator</h2>
-            <p class="text-gray-600 max-w-2xl mx-auto">Calculate how much energy, money, and carbon emissions you can save by turning off unused devices. Compare before and after scenarios to see your impact!</p>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-            <!-- Calculator Card -->
-            <div class="lg:col-span-2 bg-white rounded-xl shadow-md p-6 card-hover">
-                <h3 class="text-2xl font-bold text-eco-dark mb-6 flex items-center">
-                    <i class="fas fa-calculator mr-3 text-eco-blue"></i>Energy Calculator
-                </h3>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Electricity Rate (₹/kWh)</label>
-                        <div class="relative">
-                            <input type="number" id="ratePerKWh" value="8.5" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-eco-green focus:border-eco-green">
-                            <div class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500">
-                                ₹
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Hours of Usage</label>
-                        <input type="number" id="hours" value="8" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-eco-green focus:border-eco-green">
-                    </div>
-                </div>
-
-                <div class="mb-6">
-                    <h4 class="text-lg font-semibold text-eco-dark mb-4">Device Usage</h4>
-                    <div class="space-y-4">
-                        <!-- Lights -->
-                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                            <div class="flex items-center">
-                                <div class="device-icon mr-4">
-                                    <i class="fas fa-lightbulb"></i>
-                                </div>
-                                <div>
-                                    <h5 class="font-medium">Lights</h5>
-                                    <p class="text-sm text-gray-500">40W per unit</p>
-                                </div>
-                            </div>
-                            <div class="flex items-center space-x-2 sm:space-x-4">
-                                <div>
-                                    <label class="text-sm text-gray-500">Before</label>
-                                    <input type="number" id="lightsBefore" value="10" min="0" class="w-20 px-3 py-1 border border-gray-300 rounded text-center">
-                                </div>
-                                <div class="text-gray-400">
-                                    <i class="fas fa-arrow-right"></i>
-                                </div>
-                                <div>
-                                    <label class="text-sm text-gray-500">After</label>
-                                    <input type="number" id="lightsAfter" value="4" min="0" class="w-20 px-3 py-1 border border-gray-300 rounded text-center">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Fans -->
-                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                            <div class="flex items-center">
-                                <div class="device-icon mr-4" style="background: #fffbeb; color: #f59e0b;">
-                                    <i class="fas fa-fan"></i>
-                                </div>
-                                <div>
-                                    <h5 class="font-medium">Fans</h5>
-                                    <p class="text-sm text-gray-500">70W per unit</p>
-                                </div>
-                            </div>
-                            <div class="flex items-center space-x-2 sm:space-x-4">
-                                <div>
-                                    <label class="text-sm text-gray-500">Before</label>
-                                    <input type="number" id="fansBefore" value="8" min="0" class="w-20 px-3 py-1 border border-gray-300 rounded text-center">
-                                </div>
-                                <div class="text-gray-400">
-                                    <i class="fas fa-arrow-right"></i>
-                                </div>
-                                <div>
-                                    <label class="text-sm text-gray-500">After</label>
-                                    <input type="number" id="fansAfter" value="5" min="0" class="w-20 px-3 py-1 border border-gray-300 rounded text-center">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Computers -->
-                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                            <div class="flex items-center">
-                                <div class="device-icon mr-4" style="background: #fef2f2; color: #ef4444;">
-                                    <i class="fas fa-desktop"></i>
-                                </div>
-                                <div>
-                                    <h5 class="font-medium">Computers</h5>
-                                    <p class="text-sm text-gray-500">150W per unit</p>
-                                </div>
-                            </div>
-                            <div class="flex items-center space-x-2 sm:space-x-4">
-                                <div>
-                                    <label class="text-sm text-gray-500">Before</label>
-                                    <input type="number" id="computersBefore" value="5" min="0" class="w-20 px-3 py-1 border border-gray-300 rounded text-center">
-                                </div>
-                                <div class="text-gray-400">
-                                    <i class="fas fa-arrow-right"></i>
-                                </div>
-                                <div>
-                                    <label class="text-sm text-gray-500">After</label>
-                                    <input type="number" id="computersAfter" value="2" min="0" class="w-20 px-3 py-1 border border-gray-300 rounded text-center">
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- AC -->
-                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                            <div class="flex items-center">
-                                <div class="device-icon mr-4" style="background: #eff6ff; color: #06b6d4;">
-                                    <i class="fas fa-snowflake"></i>
-                                </div>
-                                <div>
-                                    <h5 class="font-medium">AC Units</h5>
-                                    <p class="text-sm text-gray-500">1500W per unit</p>
-                                </div>
-                            </div>
-                            <div class="flex items-center space-x-2 sm:space-x-4">
-                                <div>
-                                    <label class="text-sm text-gray-500">Before</label>
-                                    <input type="number" id="acBefore" value="2" min="0" class="w-20 px-3 py-1 border border-gray-300 rounded text-center">
-                                </div>
-                                <div class="text-gray-400">
-                                    <i class="fas fa-arrow-right"></i>
-                                </div>
-                                <div>
-                                    <label class="text-sm text-gray-500">After</label>
-                                    <input type="number" id="acAfter" value="1" min="0" class="w-20 px-3 py-1 border border-gray-300 rounded text-center">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Projectors -->
-                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                            <div class="flex items-center">
-                                <div class="device-icon mr-4" style="background: #faf5ff; color: #8b5cf6;">
-                                    <i class="fas fa-tv"></i>
-                                </div>
-                                <div>
-                                    <h5 class="font-medium">Projectors</h5>
-                                    <p class="text-sm text-gray-500">300W per unit</p>
-                                </div>
-                            </div>
-                            <div class="flex items-center space-x-2 sm:space-x-4">
-                                <div>
-                                    <label class="text-sm text-gray-500">Before</label>
-                                    <input type="number" id="projectorBefore" value="1" min="0" class="w-20 px-3 py-1 border border-gray-300 rounded text-center">
-                                </div>
-                                <div class="text-gray-400">
-                                    <i class="fas fa-arrow-right"></i>
-                                </div>
-                                <div>
-                                    <label class="text-sm text-gray-500">After</label>
-                                    <input type="number" id="projectorAfter" value="0" min="0" class="w-20 px-3 py-1 border border-gray-300 rounded text-center">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex space-x-4">
-                    <button onclick="calculateSavings()" class="flex-1 bg-eco-green text-white py-3 rounded-lg font-medium hover:bg-green-600 transition flex items-center justify-center">
-                        <i class="fas fa-bolt mr-2"></i> Calculate Savings
-                    </button>
-                    <button onclick="resetCalculator()" class="px-6 py-3 border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition">
-                        <i class="fas fa-redo mr-2"></i> Reset
-                    </button>
+<body class="antialiased">
+    <div id="app" class="min-h-screen p-4 sm:p-6 lg:p-8">
+        
+        <!-- Header -->
+        <header class="mb-8">
+            <div class="max-w-7xl mx-auto flex justify-between items-center">
+                <!-- ADDED: Link back to the main informational page -->
+                <a href="index.html" class="flex items-center gap-3 group" title="Back to SDG 7 Home">
+                    <i class="ph-bold ph-leaf text-4xl text-green-600 group-hover:animate-spin"></i>
+                    <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">EcoTrack</h1>
+                </a>
+                <div id="user-info" class="text-right">
+                    <p class="font-semibold text-gray-700">Welcome, <span id="username-display">Guest</span>!</p>
+                    <button id="logout-btn" class="hidden text-sm text-red-500 hover:underline">Log Out</button>
                 </div>
             </div>
+        </header>
 
-            <!-- Results Card -->
-            <div class="bg-white rounded-xl shadow-md p-6 card-hover">
-                <h3 class="text-2xl font-bold text-eco-dark mb-6 flex items-center">
-                    <i class="fas fa-chart-pie mr-3 text-eco-purple"></i>Your Savings
-                </h3>
-                
-                <div id="results" class="hidden fade-in">
-                    <div class="text-center mb-6">
-                        <div class="inline-block relative">
-                            <svg class="w-40 h-40 progress-ring">
-                                <circle cx="80" cy="80" r="70" stroke="#e5e7eb" stroke-width="12" fill="transparent" />
-                                <circle id="progressCircle" cx="80" cy="80" r="70" stroke="#10b981" stroke-width="12" fill="transparent" 
-                                    stroke-dasharray="440" stroke-dashoffset="440" style="transition: stroke-dashoffset 0.5s ease-in-out;" />
-                            </svg>
-                            <div class="absolute inset-0 flex flex-col items-center justify-center">
-                                <span id="energySaved" class="text-3xl font-bold text-eco-green">0</span>
-                                <span class="text-sm text-gray-500">kWh saved</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="space-y-4 mb-6">
-                        <div class="flex justify-between items-center p-3 bg-green-50 rounded-lg">
-                            <div class="flex items-center">
-                                <div class="w-8 h-8 rounded-full bg-eco-green flex items-center justify-center text-white mr-3">
-                                    <i class="fas fa-rupee-sign"></i>
-                                </div>
-                                <span class="font-medium">Money Saved</span>
-                            </div>
-                            <span id="costSaved" class="font-bold text-eco-green">₹0</span>
-                        </div>
-
-                        <div class="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
-                            <div class="flex items-center">
-                                <div class="w-8 h-8 rounded-full bg-eco-blue flex items-center justify-center text-white mr-3">
-                                    <i class="fas fa-cloud"></i>
-                                </div>
-                                <span class="font-medium">CO₂ Reduction</span>
-                            </div>
-                            <span id="carbonSaved" class="font-bold text-eco-blue">0 kg</span>
-                        </div>
-                    </div>
-
-                    <div class="bg-gray-50 p-4 rounded-lg mb-6">
-                        <h4 class="font-medium text-eco-dark mb-3">Equivalent Impact</h4>
-                        <div class="space-y-2 text-sm">
-                            <div class="flex justify-between">
-                                <span class="text-gray-600">Laptop hours powered:</span>
-                                <span id="laptopHours" class="font-medium">0</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-gray-600">Trees equivalent planted:</span>
-                                <span id="treesPlanted" class="font-medium">0</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-gray-600">Smartphones charged:</span>
-                                <span id="phonesCharged" class="font-medium">0</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <button onclick="saveMyProgress()" class="w-full bg-eco-blue text-white py-3 rounded-lg font-medium hover:bg-cyan-600 transition flex items-center justify-center">
-                        <i class="fas fa-save mr-2"></i> Save My Progress
-                    </button>
-                </div>
-
-                <div id="no-results" class="text-center py-12">
-                    <div class="w-24 h-24 mx-auto bg-gray-100 rounded-full flex items-center justify-center text-gray-400 mb-4">
-                        <i class="fas fa-calculator text-3xl"></i>
-                    </div>
-                    <p class="text-gray-500">Enter your data and click "Calculate Savings" to see results</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-            <!-- Energy Breakdown Chart -->
-            <div class="lg:col-span-2 bg-white rounded-xl shadow-md p-6 card-hover">
-                <h3 class="text-2xl font-bold text-eco-dark mb-6 flex items-center">
-                    <i class="fas fa-chart-bar mr-3 text-eco-yellow"></i>Energy Breakdown
-                </h3>
-                <div class="h-80">
-                    <canvas id="savingsChart"></canvas>
-                </div>
-            </div>
-
-            <!-- Leaderboard -->
-            <div class="bg-white rounded-xl shadow-md p-6 card-hover">
-                <h3 class="text-2xl font-bold text-eco-dark mb-6 flex items-center">
-                    <i class="fas fa-trophy mr-3 text-eco-yellow"></i>Class Leaderboard
-                </h3>
-                
+        <main class="max-w-7xl mx-auto">
+            <!-- Login/Class Selection Screen (Initially Visible) -->
+            <section id="login-screen" class="card p-8 max-w-lg mx-auto text-center fade-in">
+                <i class="ph-bold ph-users-three text-6xl text-green-500 mx-auto mb-4"></i>
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">Join Your Department</h2>
+                <p class="text-gray-600 mb-6">Select your department to track energy usage or continue as a guest.</p>
                 <div class="space-y-4">
-                    <div class="flex items-center p-3 bg-amber-50 rounded-lg">
-                        <div class="w-8 h-8 rounded-full bg-amber-500 flex items-center justify-center text-white font-bold mr-3">1</div>
-                        <div class="flex-1">
-                            <div class="font-medium">Class 10-A</div>
-                            <div class="text-sm text-amber-600">125 kWh saved</div>
-                        </div>
-                        <div class="w-8 h-8 rounded-full bg-amber-200 flex items-center justify-center">
-                            <i class="fas fa-trophy text-amber-600"></i>
-                        </div>
-                    </div>
-                    <div class="flex items-center p-3 bg-gray-50 rounded-lg">
-                        <div class="w-8 h-8 rounded-full bg-gray-400 flex items-center justify-center text-white font-bold mr-3">2</div>
-                        <div class="flex-1">
-                            <div class="font-medium">Class 9-B</div>
-                            <div class="text-sm text-gray-600">98 kWh saved</div>
-                        </div>
-                    </div>
-                    <div class="flex items-center p-3 bg-gray-50 rounded-lg">
-                        <div class="w-8 h-8 rounded-full bg-amber-800 flex items-center justify-center text-white font-bold mr-3">3</div>
-                        <div class="flex-1">
-                            <div class="font-medium">Class 8-C</div>
-                            <div class="text-sm text-gray-600">76 kWh saved</div>
-                        </div>
-                    </div>
-                    <div class="flex items-center p-3 bg-gray-50 rounded-lg">
-                        <div class="w-8 h-8 rounded-full bg-gray-400 flex items-center justify-center text-white font-bold mr-3">4</div>
-                        <div class="flex-1">
-                            <div class="font-medium">Class 11-D</div>
-                            <div class="text-sm text-gray-600">54 kWh saved</div>
-                        </div>
-                    </div>
-                    <div class="flex items-center p-3 bg-gray-50 rounded-lg">
-                        <div class="w-8 h-8 rounded-full bg-gray-400 flex items-center justify-center text-white font-bold mr-3">5</div>
-                        <div class="flex-1">
-                            <div class="font-medium">Class 7-A</div>
-                            <div class="text-sm text-gray-600">42 kWh saved</div>
-                        </div>
-                    </div>
+                    <select id="department-select" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                        <option value="FET">FET</option>
+                        <option value="FMS">FMS</option>
+                        <option value="FOAG">FOAG</option>
+                        <option value="BAMS">BAMS</option>
+                        <option value="FOA">FOA</option>
+                        <option value="FOHW">FOHW</option>
+                        <option value="Auryveda">Auryveda</option>
+                        <option value="Otsopathy">Otsopathy</option>
+                    </select>
+                    <button id="login-btn" class="btn-primary w-full">Select Department</button>
+                    <button id="guest-btn" class="w-full text-gray-600 font-medium py-2 hover:text-green-600">Continue as Guest</button>
                 </div>
+            </section>
 
-                <div class="mt-6 pt-4 border-t border-gray-200">
-                    <div class="flex items-center justify-between">
-                        <span class="text-gray-600">Your class rank:</span>
-                        <span class="font-medium text-eco-green">#6</span>
+            <!-- Main Content (Initially Hidden) -->
+            <div id="main-content" class="hidden fade-in">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    
+                    <!-- Left Column: Input & Actions -->
+                    <div class="lg:col-span-1 space-y-8">
+                        <!-- Device Usage Input -->
+                        <section id="input-section" class="card p-6">
+                            <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                                <i class="ph-bold ph-plugs-connected text-green-600"></i>
+                                Today's Device Usage
+                            </h2>
+                            <form id="device-form" class="space-y-4">
+                                <div id="device-list">
+                                    <!-- Device entries will be added here -->
+                                </div>
+                                <button type="button" id="add-device-btn" class="w-full flex items-center justify-center gap-2 py-2 px-4 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:bg-gray-100 hover:border-gray-400 transition">
+                                    <i class="ph-bold ph-plus-circle"></i>
+                                    Add Device
+                                </button>
+                                <button type="submit" class="btn-primary w-full">Calculate & Log Savings</button>
+                            </form>
+                             <!-- Yesterday's Usage -->
+                            <div class="mt-6">
+                                <label class="flex items-center space-x-2 text-sm text-gray-700 cursor-pointer">
+                                    <input type="checkbox" id="save-yesterday-checkbox" class="rounded text-green-600 focus:ring-green-500">
+                                    <span>Save today's usage as yesterday's data for next time.</span>
+                                </label>
+                            </div>
+                        </section>
+
+                         <!-- Leaderboard & Awareness -->
+                        <section class="card p-6">
+                            <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                                <i class="ph-bold ph-trophy text-yellow-500"></i>
+                                Department Leaderboard
+                            </h2>
+                            <ul id="leaderboard" class="space-y-3">
+                                <!-- Leaderboard items will be populated here -->
+                            </ul>
+                        </section>
+                        
+                        <!-- ADDED: User History Section -->
+                        <section class="card p-6">
+                            <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                                <i class="ph-bold ph-clock-counter-clockwise text-blue-500"></i>
+                                My Recent Activity
+                            </h2>
+                            <ul id="history-log" class="space-y-2 text-sm max-h-48 overflow-y-auto pr-2">
+                                <!-- History items will be populated here -->
+                            </ul>
+                        </section>
                     </div>
-                    <div class="mt-2 bg-gray-200 rounded-full h-2">
-                        <div class="bg-eco-green h-2 rounded-full" style="width: 60%"></div>
+
+                    <!-- Right Column: Dashboard & Graph -->
+                    <div class="lg:col-span-2 space-y-8">
+                        <!-- Output Dashboard -->
+                        <section id="dashboard-section">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                                <div class="card p-5 flex items-center gap-4">
+                                    <div class="bg-green-100 p-3 rounded-full">
+                                        <i class="ph-bold ph-lightning text-3xl text-green-600"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-500 font-medium">Energy Saved Today</p>
+                                        <p id="energy-saved" class="text-2xl font-bold text-gray-800">0.00 kWh</p>
+                                    </div>
+                                </div>
+                                <div class="card p-5 flex items-center gap-4">
+                                    <div class="bg-blue-100 p-3 rounded-full">
+                                         <i class="ph-bold ph-currency-inr text-3xl text-blue-600"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-500 font-medium">Money Saved Today</p>
+                                        <p id="money-saved" class="text-2xl font-bold text-gray-800">₹0.00</p>
+                                    </div>
+                                </div>
+                                <div class="card p-5 flex items-center gap-4">
+                                    <div class="bg-gray-200 p-3 rounded-full">
+                                        <i class="ph-bold ph-factory text-3xl text-gray-600"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-500 font-medium">CO₂ Reduction</p>
+                                        <p id="co2-reduced" class="text-2xl font-bold text-gray-800">0.00 kg</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Graph of Energy Usage -->
+                        <section class="card p-6">
+                             <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                                <i class="ph-bold ph-chart-bar text-purple-600"></i>
+                                This Week's Energy Usage (kWh)
+                            </h2>
+                            <div class="h-64 sm:h-80">
+                                <canvas id="energy-chart"></canvas>
+                            </div>
+                        </section>
+                        
+                        <!-- Eco Tips & SDG 7 -->
+                        <section class="card p-6 bg-green-500 text-white">
+                             <div class="flex items-start gap-4">
+                                <i class="ph-bold ph-lightbulb text-5xl text-yellow-300 flex-shrink-0 mt-1"></i>
+                                <div>
+                                    <h2 class="text-xl font-bold mb-2">Eco-Tip of the Day</h2>
+                                    <p id="eco-tip" class="text-green-100 mb-4">Unplug chargers when not in use. They still draw a small amount of power, often called "vampire power."</p>
+                                    <a href="index.html" class="font-semibold text-white inline-flex items-center gap-1 hover:underline">
+                                        Learn about SDG 7: Affordable and Clean Energy <i class="ph-bold ph-arrow-right"></i>
+                                    </a>
+                                </div>
+                             </div>
+                        </section>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Energy Tips -->
-        <div class="bg-white rounded-xl shadow-md p-6 mb-12">
-            <h3 class="text-2xl font-bold text-eco-dark mb-6 flex items-center">
-                <i class="fas fa-lightbulb mr-3 text-eco-yellow"></i>Energy Saving Tips
-            </h3>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="p-4 bg-green-50 rounded-lg">
-                    <div class="w-12 h-12 rounded-full bg-eco-green flex items-center justify-center text-white mb-3">
-                        <i class="fas fa-sun"></i>
-                    </div>
-                    <h4 class="font-medium mb-2">Use Natural Light</h4>
-                    <p class="text-sm text-gray-600">Open curtains during the day to reduce lighting needs.</p>
-                </div>
-                <div class="p-4 bg-blue-50 rounded-lg">
-                    <div class="w-12 h-12 rounded-full bg-eco-blue flex items-center justify-center text-white mb-3">
-                        <i class="fas fa-fan"></i>
-                    </div>
-                    <h4 class="font-medium mb-2">Optimize Fans</h4>
-                    <p class="text-sm text-gray-600">Use ceiling fans instead of AC when possible.</p>
-                </div>
-                <div class="p-4 bg-purple-50 rounded-lg">
-                    <div class="w-12 h-12 rounded-full bg-eco-purple flex items-center justify-center text-white mb-3">
-                        <i class="fas fa-plug"></i>
-                    </div>
-                    <h4 class="font-medium mb-2">Unplug Devices</h4>
-                    <p class="text-sm text-gray-600">Devices consume energy even when turned off but plugged in.</p>
-                </div>
-                <div class="p-4 bg-amber-50 rounded-lg">
-                    <div class="w-12 h-12 rounded-full bg-eco-yellow flex items-center justify-center text-white mb-3">
-                        <i class="fas fa-bolt"></i>
-                    </div>
-                    <h4 class="font-medium mb-2">LED Bulbs</h4>
-                    <p class="text-sm text-gray-600">Switch to LED bulbs which use 75% less energy.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- SDG Goals Section -->
-        <div class="bg-eco-green/10 rounded-xl p-6 mb-12">
-            <div class="flex flex-col md:flex-row items-center">
-                <div class="md:w-1/3 mb-6 md:mb-0 flex justify-center">
-                    <img src="https://placehold.co/300x200/10b981/FFFFFF?text=SDG+7" alt="SDG 7 Affordable and Clean Energy logo" class="rounded-lg">
-                </div>
-                <div class="md:w-2/3 md:pl-8">
-                    <h3 class="text-2xl font-bold text-eco-dark mb-4">Contributing to Sustainable Development Goals</h3>
-                    <p class="text-gray-700 mb-4">Your energy saving efforts contribute directly to UN Sustainable Development Goal 7: Affordable and Clean Energy. By reducing energy consumption, you're helping to:</p>
-                    <ul class="list-disc list-inside text-gray-700 space-y-2">
-                        <li>Increase the share of renewable energy in the global energy mix</li>
-                        <li>Improve energy efficiency rates globally</li>
-                        <li>Expand infrastructure and upgrade technology for sustainable energy services</li>
-                    </ul>
-                    <div class="mt-6 bg-white p-4 rounded-lg">
-                        <div class="flex items-center justify-between">
-                            <span class="font-medium">Your class's contribution to SDG 7:</span>
-                            <span class="text-eco-green font-bold">125 kWh</span>
-                        </div>
-                        <div class="mt-2 bg-white rounded-full h-2 border border-eco-green">
-                            <div class="bg-eco-green h-2 rounded-full" style="width: 65%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <footer class="bg-eco-dark text-white py-12">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <div>
-                    <h4 class="text-lg font-bold mb-4">Green India Energy Saver</h4>
-                    <p class="text-gray-400">Empowering students to save energy and protect our planet through education and action.</p>
-                </div>
-                <div>
-                    <h4 class="text-lg font-bold mb-4">Resources</h4>
-                    <ul class="space-y-2 text-gray-400">
-                        <li><a href="#" class="hover:text-eco-green">Energy Tips</a></li>
-                        <li><a href="#" class="hover:text-eco-green">Lesson Plans</a></li>
-                        <li><a href="#" class="hover:text-eco-green">Activity Sheets</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="text-lg font-bold mb-4">Connect</h4>
-                    <ul class="space-y-2 text-gray-400">
-                        <li><a href="#" class="hover:text-eco-green">About Us</a></li>
-                        <li><a href="#" class="hover:text-eco-green">Contact</a></li>
-                        <li><a href="#" class="hover:text-eco-green">Partners</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="text-lg font-bold mb-4">Subscribe</h4>
-                    <p class="text-gray-400 mb-2">Get updates on new features and energy challenges</p>
-                    <div class="flex">
-                        <input type="email" placeholder="Your email" class="px-3 py-2 bg-gray-700 text-white rounded-l-lg focus:outline-none w-full">
-                        <button class="bg-eco-green px-4 py-2 rounded-r-lg hover:bg-green-600"><i class="fas fa-paper-plane"></i></button>
-                    </div>
-                </div>
-            </div>
-            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-                <p>&copy; 2025 Green India Energy Saver. Empowering the next generation of eco-warriors.</p>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Toast Notification -->
-    <div id="toast-notification" class="fixed bottom-5 right-5 bg-eco-dark text-white px-6 py-3 rounded-lg shadow-lg opacity-0 transform translate-y-10">
-        <i class="fas fa-check-circle mr-2 text-eco-green"></i> Progress Saved!
+        </main>
     </div>
 
-    <script>
-        // Device wattages
-        const deviceWattages = {
-            lights: 40,
-            fans: 70,
-            computers: 150,
-            ac: 1500,
-            projector: 300
-        };
+<script>
+document.addEventListener('DOMContentLoaded', () => {
 
-        const initialValues = {
-            ratePerKWh: 8.5,
-            hours: 8,
-            lightsBefore: 10, lightsAfter: 4,
-            fansBefore: 8, fansAfter: 5,
-            computersBefore: 5, computersAfter: 2,
-            acBefore: 2, acAfter: 1,
-            projectorBefore: 1, projectorAfter: 0,
-        };
+    // --- DOM ELEMENTS ---
+    const loginScreen = document.getElementById('login-screen');
+    const mainContent = document.getElementById('main-content');
+    const loginBtn = document.getElementById('login-btn');
+    const guestBtn = document.getElementById('guest-btn');
+    const logoutBtn = document.getElementById('logout-btn');
+    const departmentSelect = document.getElementById('department-select');
+    const usernameDisplay = document.getElementById('username-display');
+    const addDeviceBtn = document.getElementById('add-device-btn');
+    const deviceList = document.getElementById('device-list');
+    const deviceForm = document.getElementById('device-form');
+    const energySavedEl = document.getElementById('energy-saved');
+    const moneySavedEl = document.getElementById('money-saved');
+    const co2ReducedEl = document.getElementById('co2-reduced');
+    const leaderboardEl = document.getElementById('leaderboard');
+    const ecoTipEl = document.getElementById('eco-tip');
+    const saveYesterdayCheckbox = document.getElementById('save-yesterday-checkbox');
+    const historyLogEl = document.getElementById('history-log'); // ADDED
 
-        // Carbon emission factor for India (kg CO2 per kWh)
-        const carbonFactor = 0.82;
-        let savingsChart = null;
+    // --- APP STATE & CONSTANTS ---
+    let currentUser = localStorage.getItem('ecoTrackUser') || 'Guest';
+    let energyChart;
+    const WATTAGE_MAP = { 'Fan': 75, 'Light (LED)': 15, 'Projector': 300, 'AC (1.5 Ton)': 1500, 'Computer': 200, 'Lift': 5000, 'Other': 100 };
+    const COST_PER_KWH = 8; // in ₹
+    const CO2_PER_KWH = 0.82; // in kg
+    const ECO_TIPS = [
+        "Use natural light whenever possible instead of turning on lights.",
+        "Turn off lights and fans when you leave a room, even for a short time.",
+        "Set your AC to 24-26°C for optimal energy efficiency.",
+        "Report any flickering lights or faulty equipment, as they can consume more power.",
+        "Unplug chargers when not in use. They still draw 'vampire power'."
+    ];
+
+    // --- INITIALIZATION ---
+    function init() {
+        checkLoginState();
+        addDeviceRow(); // Add one device row by default
+        renderLeaderboard();
+        renderChart();
+        displayRandomEcoTip();
+        renderHistory(); // ADDED
+    }
+
+    // --- AUTH & UI TOGGLING ---
+    function checkLoginState() {
+        if (currentUser && currentUser !== 'Guest') {
+            showMainContent(currentUser);
+        } else {
+            showLoginScreen();
+        }
+    }
+
+    function showMainContent(username) {
+        loginScreen.classList.add('hidden');
+        mainContent.classList.remove('hidden');
+        logoutBtn.classList.remove('hidden');
+        usernameDisplay.textContent = username;
+        currentUser = username;
+        localStorage.setItem('ecoTrackUser', username);
+        renderHistory(); // ADDED: Refresh history for the new user
+        renderLeaderboard(); // Refresh leaderboard to highlight current user
+    }
+
+    function showLoginScreen() {
+        loginScreen.classList.remove('hidden');
+        mainContent.classList.add('hidden');
+        logoutBtn.classList.add('hidden');
+        usernameDisplay.textContent = 'Guest';
+        currentUser = 'Guest';
+        localStorage.removeItem('ecoTrackUser');
+        // Reset dashboard on logout
+        updateDashboard(0, 0, 0);
+    }
+
+    loginBtn.addEventListener('click', () => {
+        const selectedDepartment = departmentSelect.value;
+        showMainContent(selectedDepartment);
+    });
+
+    guestBtn.addEventListener('click', () => {
+        showMainContent('Guest');
+    });
+
+    logoutBtn.addEventListener('click', () => {
+        showLoginScreen();
+    });
+
+    // --- DYNAMIC FORM LOGIC ---
+    addDeviceBtn.addEventListener('click', addDeviceRow);
+
+    function addDeviceRow() {
+        const deviceId = Date.now(); // Unique ID for the row
+        const row = document.createElement('div');
+        row.classList.add('device-row', 'grid', 'grid-cols-1', 'sm:grid-cols-3', 'gap-2', 'items-center', 'mb-2', 'fade-in');
+        row.dataset.id = deviceId;
+
+        const selectOptions = Object.keys(WATTAGE_MAP).map(device => `<option value="${device}">${device}</option>`).join('');
+
+        row.innerHTML = `
+            <select class="device-type w-full p-2 border border-gray-300 rounded-md">
+                ${selectOptions}
+            </select>
+            <input type="number" class="device-count w-full p-2 border border-gray-300 rounded-md" placeholder="Qty" min="1" value="1">
+            <div class="flex items-center gap-2">
+                <input type="number" class="device-hours w-full p-2 border border-gray-300 rounded-md" placeholder="Hours used" min="0" step="0.1" required>
+                <button type="button" class="remove-device-btn text-red-500 hover:text-red-700 p-2" onclick="removeDeviceRow(${deviceId})">
+                    <i class="ph-bold ph-trash text-xl"></i>
+                </button>
+            </div>
+        `;
+        deviceList.appendChild(row);
+    }
+    
+    window.removeDeviceRow = function(id) {
+        const rowToRemove = document.querySelector(`.device-row[data-id='${id}']`);
+        if(rowToRemove) {
+            rowToRemove.remove();
+        }
+    }
+
+    // --- CALCULATION LOGIC ---
+    deviceForm.addEventListener('submit', (e) => {
+        e.preventDefault();
         
-        // Utility to get a numeric value from an element
-        const getValue = (id) => parseFloat(document.getElementById(id).value) || 0;
+        let totalKWhToday = 0;
+        const deviceRows = document.querySelectorAll('.device-row');
 
-        // Calculate energy savings
-        function calculateSavings() {
-            const hours = getValue('hours');
-            const rate = getValue('ratePerKWh');
-            
-            // Calculate energy saved for each device in kWh
-            const lightsSaved = (getValue('lightsBefore') - getValue('lightsAfter')) * deviceWattages.lights * hours / 1000;
-            const fansSaved = (getValue('fansBefore') - getValue('fansAfter')) * deviceWattages.fans * hours / 1000;
-            const computersSaved = (getValue('computersBefore') - getValue('computersAfter')) * deviceWattages.computers * hours / 1000;
-            const acSaved = (getValue('acBefore') - getValue('acAfter')) * deviceWattages.ac * hours / 1000;
-            const projectorSaved = (getValue('projectorBefore') - getValue('projectorAfter')) * deviceWattages.projector * hours / 1000;
-            
-            // Calculate totals
-            const totalEnergySaved = lightsSaved + fansSaved + computersSaved + acSaved + projectorSaved;
-            const totalCostSaved = totalEnergySaved * rate;
-            const totalCarbonSaved = totalEnergySaved * carbonFactor;
-
-            // Prevent negative savings from being displayed
-            const displayEnergySaved = Math.max(0, totalEnergySaved);
-            const displayCostSaved = Math.max(0, totalCostSaved);
-            const displayCarbonSaved = Math.max(0, totalCarbonSaved);
-            
-            // Update UI
-            document.getElementById('energySaved').textContent = displayEnergySaved.toFixed(2);
-            document.getElementById('costSaved').textContent = '₹' + displayCostSaved.toFixed(0);
-            document.getElementById('carbonSaved').textContent = displayCarbonSaved.toFixed(2) + ' kg';
-            
-            // Update equivalent impact
-            document.getElementById('laptopHours').textContent = Math.round((displayEnergySaved * 1000) / 50); // Laptop uses ~50W
-            document.getElementById('treesPlanted').textContent = (displayCarbonSaved / 21).toFixed(1); // Avg tree absorbs 21kg CO2/year
-            document.getElementById('phonesCharged').textContent = Math.round((displayEnergySaved * 1000) / 10); // Phone charge uses ~10Wh
-            
-            // Update progress circle
-            const progressCircle = document.getElementById('progressCircle');
-            const circumference = 2 * Math.PI * progressCircle.r.baseVal.value;
-            // Scale progress to a reasonable maximum, e.g., 50 kWh for a full circle
-            const offset = circumference - (Math.min(displayEnergySaved, 50) / 50) * circumference;
-            progressCircle.style.strokeDashoffset = offset;
-            
-            // Update savings breakdown chart
-            const breakdownData = {
-                Lights: Math.max(0, lightsSaved),
-                Fans: Math.max(0, fansSaved),
-                Computers: Math.max(0, computersSaved),
-                AC: Math.max(0, acSaved),
-                Projector: Math.max(0, projectorSaved)
-            };
-            updateChart(breakdownData);
-            
-            // Show results section
-            if (totalEnergySaved > 0) {
-                document.getElementById('results').classList.remove('hidden');
-                document.getElementById('no-results').classList.add('hidden');
-            }
+        if (deviceRows.length === 0) {
+            alert("Please add at least one device to calculate usage.");
+            return;
         }
 
-        // Update visualizations with chart
-        function updateChart(breakdown) {
-            const ctx = document.getElementById('savingsChart').getContext('2d');
-            if (savingsChart) savingsChart.destroy();
+        deviceRows.forEach(row => {
+            const type = row.querySelector('.device-type').value;
+            const count = parseFloat(row.querySelector('.device-count').value) || 0;
+            const hours = parseFloat(row.querySelector('.device-hours').value) || 0;
             
-            const colors = ['#10b981', '#f59e0b', '#ef4444', '#06b6d4', '#8b5cf6'];
-            
-            savingsChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: Object.keys(breakdown),
-                    datasets: [{
-                        data: Object.values(breakdown),
-                        backgroundColor: colors,
-                        borderColor: '#ffffff',
-                        borderWidth: 3,
-                        hoverBorderWidth: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    cutout: '70%',
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                padding: 20,
-                                font: {
-                                    family: "'Inter', sans-serif"
-                                }
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    let label = context.label || '';
-                                    if (label) {
-                                        label += ': ';
-                                    }
-                                    if (context.parsed !== null) {
-                                        label += context.parsed.toFixed(2) + ' kWh';
-                                    }
-                                    return label;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        function resetCalculator() {
-            for (const key in initialValues) {
-                document.getElementById(key).value = initialValues[key];
-            }
-            document.getElementById('results').classList.add('hidden');
-            document.getElementById('no-results').classList.remove('hidden');
-            if (savingsChart) {
-                savingsChart.destroy();
-                savingsChart = null;
-            }
-        }
-
-        function saveMyProgress() {
-            const toast = document.getElementById('toast-notification');
-            toast.classList.remove('opacity-0', 'translate-y-10');
-            toast.classList.add('opacity-100', 'translate-y-0');
-
-            setTimeout(() => {
-                toast.classList.remove('opacity-100', 'translate-y-0');
-                toast.classList.add('opacity-0', 'translate-y-10');
-            }, 3000);
-        }
-
-        // Initial calculation on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            calculateSavings();
-            // Automatically recalculate when any input changes
-            const inputs = document.querySelectorAll('input[type="number"]');
-            inputs.forEach(input => {
-                input.addEventListener('input', calculateSavings);
-            });
+            const wattage = WATTAGE_MAP[type] || 0;
+            const kwh = (wattage * count * hours) / 1000;
+            totalKWhToday += kwh;
         });
-    </script>
+
+        // Get yesterday's usage
+        const yesterdayKWh = parseFloat(localStorage.getItem(`${currentUser}_yesterdayKWh`)) || (totalKWhToday * 1.15); // Assume 15% higher if no data
+
+        const savedKWh = Math.max(0, yesterdayKWh - totalKWhToday);
+        const savedMoney = savedKWh * COST_PER_KWH;
+        const reducedCO2 = savedKWh * CO2_PER_KWH;
+
+        updateDashboard(savedKWh, savedMoney, reducedCO2);
+        updateChart(totalKWhToday);
+        
+        if (currentUser !== 'Guest') {
+            updateLeaderboardData(currentUser, savedKWh);
+            addHistoryEntry({ savedKWh, totalKWh: totalKWhToday, date: new Date().toISOString() });
+        }
+        
+        if (saveYesterdayCheckbox.checked) {
+            localStorage.setItem(`${currentUser}_yesterdayKWh`, totalKWhToday.toFixed(2));
+            alert("Today's usage has been saved for tomorrow's comparison!");
+        }
+    });
+    
+    // --- UI UPDATES ---
+    function updateDashboard(kwh, money, co2) {
+        energySavedEl.textContent = `${kwh.toFixed(2)} kWh`;
+        moneySavedEl.textContent = `₹${money.toFixed(2)}`;
+        co2ReducedEl.textContent = `${co2.toFixed(2)} kg`;
+    }
+
+    // --- LEADERBOARD LOGIC (NOW DYNAMIC) ---
+    function getLeaderboardData() {
+        let data = JSON.parse(localStorage.getItem('leaderboardData'));
+        if (!data) {
+            // If no data, initialize from the department select options
+            data = {};
+            Array.from(departmentSelect.options).forEach(option => {
+                data[option.value] = { name: option.value, savings: 0 };
+            });
+        }
+        return data;
+    }
+
+    function updateLeaderboardData(department, savedKWh) {
+        if (department === 'Guest' || !department) return;
+        let data = getLeaderboardData();
+        if (data[department]) {
+            data[department].savings += savedKWh;
+        }
+        localStorage.setItem('leaderboardData', JSON.stringify(data));
+        renderLeaderboard(); // Re-render after updating
+    }
+
+    function renderLeaderboard() {
+        leaderboardEl.innerHTML = '';
+        const data = getLeaderboardData();
+        const sortedData = Object.values(data).sort((a, b) => b.savings - a.savings);
+        
+        sortedData.forEach((item, index) => {
+            const li = document.createElement('li');
+            li.classList.add('flex', 'justify-between', 'items-center', 'p-2', 'rounded-md', 'transition-colors');
+            
+            // Highlight the current user's department
+            if (item.name === currentUser) {
+                 li.classList.add('bg-green-200');
+            } else {
+                 li.classList.toggle('bg-green-50', index % 2 === 0);
+            }
+            
+            const rank = index + 1;
+            let icon = '';
+            if (rank === 1) icon = `<i class="ph-fill ph-medal text-2xl text-yellow-400"></i>`;
+            else if (rank === 2) icon = `<i class="ph-fill ph-medal text-2xl text-slate-400"></i>`;
+            else if (rank === 3) icon = `<i class="ph-fill ph-medal text-2xl text-amber-600"></i>`;
+            else icon = `<span class="font-bold text-gray-500 w-6 text-center">${rank}</span>`;
+
+            li.innerHTML = `
+                <div class="flex items-center gap-3">
+                    ${icon}
+                    <span class="font-semibold text-gray-700">${item.name}</span>
+                </div>
+                <span class="font-bold text-green-600">${item.savings.toFixed(1)} kWh</span>
+            `;
+            leaderboardEl.appendChild(li);
+        });
+    }
+
+    // --- USER HISTORY LOGIC (ADDED) ---
+    function getHistory() {
+        if (currentUser === 'Guest') return [];
+        return JSON.parse(localStorage.getItem(`history_${currentUser}`)) || [];
+    }
+
+    function addHistoryEntry(entry) {
+        if (currentUser === 'Guest') return;
+        let history = getHistory();
+        history.unshift(entry); // Add to the beginning
+        if (history.length > 10) {
+            history.pop(); // Keep the list to a max of 10 entries
+        }
+        localStorage.setItem(`history_${currentUser}`, JSON.stringify(history));
+        renderHistory();
+    }
+
+    function renderHistory() {
+        historyLogEl.innerHTML = '';
+        const history = getHistory();
+        if (history.length === 0) {
+            historyLogEl.innerHTML = `<li class="text-gray-500">No activity recorded yet.</li>`;
+            return;
+        }
+        history.forEach(entry => {
+            const li = document.createElement('li');
+            li.classList.add('flex', 'justify-between', 'items-center', 'p-2', 'rounded-md', 'bg-gray-50');
+            const entryDate = new Date(entry.date);
+            li.innerHTML = `
+                <div>
+                    <p class="font-semibold text-gray-800">Saved: ${parseFloat(entry.savedKWh).toFixed(2)} kWh</p>
+                    <p class="text-xs text-gray-500">Used: ${parseFloat(entry.totalKWh).toFixed(2)} kWh</p>
+                </div>
+                <span class="text-xs text-gray-500">${entryDate.toLocaleDateString()} ${entryDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+            `;
+            historyLogEl.appendChild(li);
+        });
+    }
+
+    function displayRandomEcoTip() {
+        const randomIndex = Math.floor(Math.random() * ECO_TIPS.length);
+        ecoTipEl.textContent = ECO_TIPS[randomIndex];
+    }
+
+    // --- CHART LOGIC ---
+    function renderChart() {
+        const ctx = document.getElementById('energy-chart').getContext('2d');
+        const weeklyData = getWeeklyData();
+        
+        energyChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    label: 'Energy Usage (kWh)',
+                    data: weeklyData.data,
+                    backgroundColor: 'rgba(34, 197, 94, 0.6)',
+                    borderColor: 'rgba(22, 163, 74, 1)',
+                    borderWidth: 1,
+                    borderRadius: 5,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true, grid: { color: '#e5e7eb' } },
+                    x: { grid: { display: false } }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+    }
+    
+    function getWeeklyData() {
+        let data = JSON.parse(localStorage.getItem(`weeklyEnergyData_${currentUser}`));
+        if (!data || !Array.isArray(data) || data.length !== 7) {
+            return { data: [15, 18, 16, 20, 17, 22, 19] };
+        }
+        return { data };
+    }
+
+    function updateChart(todayUsage) {
+        const dayOfWeek = new Date().getDay();
+        const chartIndex = (dayOfWeek === 0) ? 6 : dayOfWeek - 1;
+
+        let weeklyData = getWeeklyData().data;
+        weeklyData[chartIndex] = todayUsage;
+        
+        localStorage.setItem(`weeklyEnergyData_${currentUser}`, JSON.stringify(weeklyData));
+        
+        energyChart.data.datasets[0].data = weeklyData;
+        energyChart.update();
+    }
+
+    // --- KICKSTART THE APP ---
+    init();
+});
+</script>
 </body>
 </html>
