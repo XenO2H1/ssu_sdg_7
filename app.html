@@ -356,7 +356,6 @@ document.addEventListener('DOMContentLoaded', () => {
         "Ensure rooms are well-sealed to prevent cool air from escaping when the AC is on."
     ];
     const ACHIEVEMENTS = {
-        first_entry: { title: "Eco Starter", icon: "seedling", condition: (stats) => stats.totalEntries >= 1 },
         first_saving: { title: "Saver Seed", icon: "drop", condition: (stats) => stats.totalSavedKWh > 0 },
         ten_kwh_saved: { title: "Green Thumb", icon: "leaf", condition: (stats) => stats.totalSavedKWh >= 10 },
         fifty_kwh_saved: { title: "Energy Wise", icon: "lightning", condition: (stats) => stats.totalSavedKWh >= 50 },
@@ -622,7 +621,7 @@ document.addEventListener('DOMContentLoaded', () => {
             badge.classList.add('achievement-badge', 'p-2');
             if(isUnlocked) badge.classList.add('unlocked');
             badge.title = `${ach.title}${isUnlocked ? ' - Unlocked!' : ' - Locked'}`;
-            badge.innerHTML = `<i class="ph-fill ph-${ach.icon} text-5xl text-green-500"></i><p class="text-xs mt-1 font-semibold">${ach.title}</p>`;
+            badge.innerHTML = `<i class="ph-bold ph-${ach.icon} text-5xl text-green-500"></i><p class="text-xs mt-1 font-semibold">${ach.title}</p>`;
             achievementsGrid.appendChild(badge);
         }
     }
@@ -708,7 +707,7 @@ document.addEventListener('DOMContentLoaded', () => {
             tipsHtml += `<li>${tip}</li>`;
         });
         tipsHtml += '</ul>';
-        showModalAlert("Energy Saving Tips", tipsHtml, false);
+        showModalAlert("Energy Saving Tips", tipsHtml, true); // Explicitly hide the confirm button
     }
 
     // --- MODAL CONTROLS ---
@@ -803,4 +802,6 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+
+
 
