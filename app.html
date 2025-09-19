@@ -48,6 +48,49 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        /* Styles for the modal */
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .modal-backdrop.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            max-width: 500px;
+            width: 90%;
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+        }
+        .modal-backdrop.visible .modal-content {
+            transform: scale(1);
+        }
+        /* Style for achievements */
+        .achievement-badge {
+            opacity: 0.3;
+            filter: grayscale(1);
+            transition: all 0.4s ease;
+        }
+        .achievement-badge.unlocked {
+            opacity: 1;
+            filter: grayscale(0);
+            transform: scale(1.1);
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -120,6 +163,20 @@
                                 </label>
                             </div>
                         </section>
+                        
+                        <!-- NEW: Goal Setting Section -->
+                        <section id="goal-section" class="card p-6">
+                            <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                                <i class="ph-bold ph-flag-checkered text-indigo-500"></i>
+                                Weekly Savings Goal
+                            </h2>
+                            <p class="text-sm text-gray-600 mb-2">Set a target for total kWh saved this week.</p>
+                            <div class="flex gap-2">
+                                <input type="number" id="goal-input" class="w-full p-2 border border-gray-300 rounded-md" placeholder="e.g., 50" min="1">
+                                <button id="set-goal-btn" class="btn-primary px-4">Set</button>
+                            </div>
+                            <p id="goal-display" class="mt-3 text-sm font-semibold text-gray-700"></p>
+                        </section>
 
                          <!-- Leaderboard & Awareness -->
                         <section class="card p-6">
@@ -132,12 +189,15 @@
                             </ul>
                         </section>
                         
-                        <!-- ADDED: User History Section -->
+                        <!-- User History Section -->
                         <section class="card p-6">
-                            <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-                                <i class="ph-bold ph-clock-counter-clockwise text-blue-500"></i>
-                                My Recent Activity
-                            </h2>
+                            <div class="flex justify-between items-center mb-4">
+                                <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+                                    <i class="ph-bold ph-clock-counter-clockwise text-blue-500"></i>
+                                    My Recent Activity
+                                </h2>
+                                <button id="clear-history-btn" class="text-xs text-red-500 hover:underline" title="Clear all history for this user">Clear</button>
+                            </div>
                             <ul id="history-log" class="space-y-2 text-sm max-h-48 overflow-y-auto pr-2">
                                 <!-- History items will be populated here -->
                             </ul>
@@ -181,12 +241,28 @@
 
                         <!-- Graph of Energy Usage -->
                         <section class="card p-6">
-                             <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-                                <i class="ph-bold ph-chart-bar text-purple-600"></i>
-                                This Week's Energy Usage (kWh)
-                            </h2>
+                             <div class="flex justify-between items-center mb-4">
+                                <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+                                    <i class="ph-bold ph-chart-bar text-purple-600"></i>
+                                    This Week's Energy Usage (kWh)
+                                </h2>
+                                <button id="download-report-btn" class="text-sm bg-gray-200 px-3 py-1 rounded-md hover:bg-gray-300 flex items-center gap-2">
+                                     <i class="ph-bold ph-download-simple"></i> Report
+                                </button>
+                            </div>
                             <div class="h-64 sm:h-80">
                                 <canvas id="energy-chart"></canvas>
+                            </div>
+                        </section>
+                        
+                        <!-- NEW: Achievements Section -->
+                        <section class="card p-6">
+                            <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                                <i class="ph-bold ph-star text-amber-500"></i>
+                                Achievements
+                            </h2>
+                            <div id="achievements-grid" class="grid grid-cols-3 sm:grid-cols-6 gap-4 text-center">
+                                <!-- Achievement badges will be populated here -->
                             </div>
                         </section>
                         
@@ -197,9 +273,14 @@
                                 <div>
                                     <h2 class="text-xl font-bold mb-2">Eco-Tip of the Day</h2>
                                     <p id="eco-tip" class="text-green-100 mb-4">Unplug chargers when not in use. They still draw a small amount of power, often called "vampire power."</p>
-                                    <a href="index.html" class="font-semibold text-white inline-flex items-center gap-1 hover:underline">
-                                        Learn about SDG 7: Affordable and Clean Energy <i class="ph-bold ph-arrow-right"></i>
-                                    </a>
+                                    <div class="flex gap-4">
+                                        <a href="index.html" class="font-semibold text-white inline-flex items-center gap-1 hover:underline">
+                                            Learn about SDG 7 <i class="ph-bold ph-arrow-right"></i>
+                                        </a>
+                                        <button id="more-tips-btn" class="font-semibold text-white inline-flex items-center gap-1 hover:underline">
+                                            More Tips <i class="ph-bold ph-arrow-right"></i>
+                                        </button>
+                                    </div>
                                 </div>
                              </div>
                         </section>
@@ -207,6 +288,20 @@
                 </div>
             </div>
         </main>
+    </div>
+
+    <!-- NEW: Modal Structure -->
+    <div id="modal" class="modal-backdrop">
+        <div class="modal-content">
+            <h3 id="modal-title" class="text-2xl font-bold text-gray-800 mb-4">Modal Title</h3>
+            <div id="modal-body" class="text-gray-600">
+                <p>This is the modal body.</p>
+            </div>
+            <div id="modal-footer" class="mt-6 flex justify-end gap-3">
+                <button id="modal-close-btn" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300">Close</button>
+                <button id="modal-confirm-btn" class="btn-primary hidden">Confirm</button>
+            </div>
+        </div>
     </div>
 
 <script>
@@ -229,7 +324,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const leaderboardEl = document.getElementById('leaderboard');
     const ecoTipEl = document.getElementById('eco-tip');
     const saveYesterdayCheckbox = document.getElementById('save-yesterday-checkbox');
-    const historyLogEl = document.getElementById('history-log'); // ADDED
+    const historyLogEl = document.getElementById('history-log');
+    // New Elements
+    const goalInput = document.getElementById('goal-input');
+    const setGoalBtn = document.getElementById('set-goal-btn');
+    const goalDisplay = document.getElementById('goal-display');
+    const achievementsGrid = document.getElementById('achievements-grid');
+    const clearHistoryBtn = document.getElementById('clear-history-btn');
+    const downloadReportBtn = document.getElementById('download-report-btn');
+    const moreTipsBtn = document.getElementById('more-tips-btn');
+    const modal = document.getElementById('modal');
+    const modalTitle = document.getElementById('modal-title');
+    const modalBody = document.getElementById('modal-body');
+    const modalCloseBtn = document.getElementById('modal-close-btn');
+    const modalConfirmBtn = document.getElementById('modal-confirm-btn');
+
 
     // --- APP STATE & CONSTANTS ---
     let currentUser = localStorage.getItem('ecoTrackUser') || 'Guest';
@@ -242,8 +351,18 @@ document.addEventListener('DOMContentLoaded', () => {
         "Turn off lights and fans when you leave a room, even for a short time.",
         "Set your AC to 24-26°C for optimal energy efficiency.",
         "Report any flickering lights or faulty equipment, as they can consume more power.",
-        "Unplug chargers when not in use. They still draw 'vampire power'."
+        "Unplug chargers when not in use. They still draw 'vampire power'.",
+        "Enable 'sleep mode' on computers and projectors when they are not in active use.",
+        "Ensure rooms are well-sealed to prevent cool air from escaping when the AC is on."
     ];
+    const ACHIEVEMENTS = {
+        first_entry: { title: "Eco Starter", icon: "seedling", condition: (stats) => stats.totalEntries >= 1 },
+        first_saving: { title: "Saver Seed", icon: "drop", condition: (stats) => stats.totalSavedKWh > 0 },
+        ten_kwh_saved: { title: "Green Thumb", icon: "leaf", condition: (stats) => stats.totalSavedKWh >= 10 },
+        fifty_kwh_saved: { title: "Energy Wise", icon: "lightning", condition: (stats) => stats.totalSavedKWh >= 50 },
+        hundred_kwh_saved: { title: "Eco Champion", icon: "trophy", condition: (stats) => stats.totalSavedKWh >= 100 },
+        five_day_streak: { title: "Consistent Saver", icon: "calendar-check", condition: (stats) => stats.streak >= 5 },
+    };
 
     // --- INITIALIZATION ---
     function init() {
@@ -252,7 +371,25 @@ document.addEventListener('DOMContentLoaded', () => {
         renderLeaderboard();
         renderChart();
         displayRandomEcoTip();
-        renderHistory(); // ADDED
+        renderHistory();
+        renderGoal();
+        renderAchievements();
+        setupEventListeners();
+    }
+    
+    // --- EVENT LISTENERS ---
+    function setupEventListeners() {
+        loginBtn.addEventListener('click', () => showMainContent(departmentSelect.value));
+        guestBtn.addEventListener('click', () => showMainContent('Guest'));
+        logoutBtn.addEventListener('click', showLoginScreen);
+        addDeviceBtn.addEventListener('click', addDeviceRow);
+        deviceForm.addEventListener('submit', handleFormSubmit);
+        setGoalBtn.addEventListener('click', handleSetGoal);
+        clearHistoryBtn.addEventListener('click', handleClearHistory);
+        downloadReportBtn.addEventListener('click', handleDownloadReport);
+        moreTipsBtn.addEventListener('click', showMoreTips);
+        modalCloseBtn.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => { if(e.target === modal) closeModal(); }); // Close on backdrop click
     }
 
     // --- AUTH & UI TOGGLING ---
@@ -271,8 +408,12 @@ document.addEventListener('DOMContentLoaded', () => {
         usernameDisplay.textContent = username;
         currentUser = username;
         localStorage.setItem('ecoTrackUser', username);
-        renderHistory(); // ADDED: Refresh history for the new user
-        renderLeaderboard(); // Refresh leaderboard to highlight current user
+        // Refresh all user-specific data
+        renderHistory();
+        renderLeaderboard();
+        renderGoal();
+        renderAchievements();
+        renderChart(); // Re-render chart with user's data
     }
 
     function showLoginScreen() {
@@ -282,65 +423,39 @@ document.addEventListener('DOMContentLoaded', () => {
         usernameDisplay.textContent = 'Guest';
         currentUser = 'Guest';
         localStorage.removeItem('ecoTrackUser');
-        // Reset dashboard on logout
         updateDashboard(0, 0, 0);
     }
-
-    loginBtn.addEventListener('click', () => {
-        const selectedDepartment = departmentSelect.value;
-        showMainContent(selectedDepartment);
-    });
-
-    guestBtn.addEventListener('click', () => {
-        showMainContent('Guest');
-    });
-
-    logoutBtn.addEventListener('click', () => {
-        showLoginScreen();
-    });
-
+    
     // --- DYNAMIC FORM LOGIC ---
-    addDeviceBtn.addEventListener('click', addDeviceRow);
-
     function addDeviceRow() {
-        const deviceId = Date.now(); // Unique ID for the row
+        const deviceId = Date.now();
         const row = document.createElement('div');
         row.classList.add('device-row', 'grid', 'grid-cols-1', 'sm:grid-cols-3', 'gap-2', 'items-center', 'mb-2', 'fade-in');
         row.dataset.id = deviceId;
-
         const selectOptions = Object.keys(WATTAGE_MAP).map(device => `<option value="${device}">${device}</option>`).join('');
-
         row.innerHTML = `
-            <select class="device-type w-full p-2 border border-gray-300 rounded-md">
-                ${selectOptions}
-            </select>
+            <select class="device-type w-full p-2 border border-gray-300 rounded-md">${selectOptions}</select>
             <input type="number" class="device-count w-full p-2 border border-gray-300 rounded-md" placeholder="Qty" min="1" value="1">
             <div class="flex items-center gap-2">
                 <input type="number" class="device-hours w-full p-2 border border-gray-300 rounded-md" placeholder="Hours used" min="0" step="0.1" required>
-                <button type="button" class="remove-device-btn text-red-500 hover:text-red-700 p-2" onclick="removeDeviceRow(${deviceId})">
-                    <i class="ph-bold ph-trash text-xl"></i>
-                </button>
-            </div>
-        `;
+                <button type="button" class="remove-device-btn text-red-500 hover:text-red-700 p-2" onclick="removeDeviceRow(${deviceId})"><i class="ph-bold ph-trash text-xl"></i></button>
+            </div>`;
         deviceList.appendChild(row);
     }
     
     window.removeDeviceRow = function(id) {
         const rowToRemove = document.querySelector(`.device-row[data-id='${id}']`);
-        if(rowToRemove) {
-            rowToRemove.remove();
-        }
+        if(rowToRemove) rowToRemove.remove();
     }
 
     // --- CALCULATION LOGIC ---
-    deviceForm.addEventListener('submit', (e) => {
+    function handleFormSubmit(e) {
         e.preventDefault();
-        
         let totalKWhToday = 0;
         const deviceRows = document.querySelectorAll('.device-row');
 
         if (deviceRows.length === 0) {
-            alert("Please add at least one device to calculate usage.");
+            showModalAlert("No Devices Added", "Please add at least one device to calculate usage.");
             return;
         }
 
@@ -348,15 +463,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const type = row.querySelector('.device-type').value;
             const count = parseFloat(row.querySelector('.device-count').value) || 0;
             const hours = parseFloat(row.querySelector('.device-hours').value) || 0;
-            
             const wattage = WATTAGE_MAP[type] || 0;
-            const kwh = (wattage * count * hours) / 1000;
-            totalKWhToday += kwh;
+            totalKWhToday += (wattage * count * hours) / 1000;
         });
 
-        // Get yesterday's usage
-        const yesterdayKWh = parseFloat(localStorage.getItem(`${currentUser}_yesterdayKWh`)) || (totalKWhToday * 1.15); // Assume 15% higher if no data
-
+        const yesterdayKWh = parseFloat(localStorage.getItem(`${currentUser}_yesterdayKWh`)) || (totalKWhToday * 1.15);
         const savedKWh = Math.max(0, yesterdayKWh - totalKWhToday);
         const savedMoney = savedKWh * COST_PER_KWH;
         const reducedCO2 = savedKWh * CO2_PER_KWH;
@@ -367,26 +478,26 @@ document.addEventListener('DOMContentLoaded', () => {
         if (currentUser !== 'Guest') {
             updateLeaderboardData(currentUser, savedKWh);
             addHistoryEntry({ savedKWh, totalKWh: totalKWhToday, date: new Date().toISOString() });
+            checkAndAwardAchievements();
         }
         
         if (saveYesterdayCheckbox.checked) {
             localStorage.setItem(`${currentUser}_yesterdayKWh`, totalKWhToday.toFixed(2));
-            alert("Today's usage has been saved for tomorrow's comparison!");
+            showModalAlert("Data Saved", "Today's usage has been saved for tomorrow's comparison!");
         }
-    });
+    }
     
-    // --- UI UPDATES ---
+    // --- UI & DATA UPDATES ---
     function updateDashboard(kwh, money, co2) {
         energySavedEl.textContent = `${kwh.toFixed(2)} kWh`;
         moneySavedEl.textContent = `₹${money.toFixed(2)}`;
         co2ReducedEl.textContent = `${co2.toFixed(2)} kg`;
     }
 
-    // --- LEADERBOARD LOGIC (NOW DYNAMIC) ---
+    // --- LEADERBOARD LOGIC ---
     function getLeaderboardData() {
         let data = JSON.parse(localStorage.getItem('leaderboardData'));
         if (!data) {
-            // If no data, initialize from the department select options
             data = {};
             Array.from(departmentSelect.options).forEach(option => {
                 data[option.value] = { name: option.value, savings: 0 };
@@ -398,11 +509,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateLeaderboardData(department, savedKWh) {
         if (department === 'Guest' || !department) return;
         let data = getLeaderboardData();
-        if (data[department]) {
-            data[department].savings += savedKWh;
-        }
+        if (data[department]) data[department].savings += savedKWh;
         localStorage.setItem('leaderboardData', JSON.stringify(data));
-        renderLeaderboard(); // Re-render after updating
+        renderLeaderboard();
     }
 
     function renderLeaderboard() {
@@ -414,12 +523,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const li = document.createElement('li');
             li.classList.add('flex', 'justify-between', 'items-center', 'p-2', 'rounded-md', 'transition-colors');
             
-            // Highlight the current user's department
-            if (item.name === currentUser) {
-                 li.classList.add('bg-green-200');
-            } else {
-                 li.classList.toggle('bg-green-50', index % 2 === 0);
-            }
+            if (item.name === currentUser) li.classList.add('bg-green-200');
+            else li.classList.toggle('bg-green-50', index % 2 === 0);
             
             const rank = index + 1;
             let icon = '';
@@ -432,30 +537,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="flex items-center gap-3">
                     ${icon}
                     <span class="font-semibold text-gray-700">${item.name}</span>
+                    ${item.name === currentUser ? '<span class="text-xs bg-green-600 text-white px-2 py-0.5 rounded-full">You</span>' : ''}
                 </div>
-                <span class="font-bold text-green-600">${item.savings.toFixed(1)} kWh</span>
-            `;
+                <span class="font-bold text-green-600">${item.savings.toFixed(1)} kWh</span>`;
             leaderboardEl.appendChild(li);
         });
     }
 
-    // --- USER HISTORY LOGIC (ADDED) ---
+    // --- USER HISTORY LOGIC ---
     function getHistory() {
         if (currentUser === 'Guest') return [];
         return JSON.parse(localStorage.getItem(`history_${currentUser}`)) || [];
     }
-
     function addHistoryEntry(entry) {
         if (currentUser === 'Guest') return;
         let history = getHistory();
-        history.unshift(entry); // Add to the beginning
-        if (history.length > 10) {
-            history.pop(); // Keep the list to a max of 10 entries
-        }
+        history.unshift(entry);
+        if (history.length > 10) history.pop();
         localStorage.setItem(`history_${currentUser}`, JSON.stringify(history));
         renderHistory();
     }
-
     function renderHistory() {
         historyLogEl.innerHTML = '';
         const history = getHistory();
@@ -465,50 +566,216 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         history.forEach(entry => {
             const li = document.createElement('li');
-            li.classList.add('flex', 'justify-between', 'items-center', 'p-2', 'rounded-md', 'bg-gray-50');
             const entryDate = new Date(entry.date);
+            li.classList.add('flex', 'justify-between', 'items-center', 'p-2', 'rounded-md', 'bg-gray-50');
             li.innerHTML = `
                 <div>
                     <p class="font-semibold text-gray-800">Saved: ${parseFloat(entry.savedKWh).toFixed(2)} kWh</p>
                     <p class="text-xs text-gray-500">Used: ${parseFloat(entry.totalKWh).toFixed(2)} kWh</p>
                 </div>
-                <span class="text-xs text-gray-500">${entryDate.toLocaleDateString()} ${entryDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
-            `;
+                <span class="text-xs text-gray-500">${entryDate.toLocaleDateString()} ${entryDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>`;
             historyLogEl.appendChild(li);
         });
     }
+    function handleClearHistory() {
+        showModalConfirm("Clear History?", "Are you sure you want to delete all your activity? This action cannot be undone.", () => {
+            localStorage.removeItem(`history_${currentUser}`);
+            renderHistory();
+        });
+    }
 
+    // --- GOAL LOGIC ---
+    function handleSetGoal() {
+        const goalValue = parseFloat(goalInput.value);
+        if(goalValue && goalValue > 0) {
+            localStorage.setItem(`goal_${currentUser}`, goalValue);
+            renderGoal();
+            renderChart(); // Redraw chart with new goal
+            goalInput.value = '';
+        } else {
+            showModalAlert("Invalid Goal", "Please enter a positive number for your goal.");
+        }
+    }
+    function getGoal() {
+        return parseFloat(localStorage.getItem(`goal_${currentUser}`)) || 0;
+    }
+    function renderGoal() {
+        const goal = getGoal();
+        if(goal > 0) {
+            goalDisplay.textContent = `Current Goal: ${goal} kWh / week`;
+        } else {
+            goalDisplay.textContent = `No goal set.`;
+        }
+    }
+
+    // --- ACHIEVEMENT LOGIC ---
+    function getAchievements() {
+        return JSON.parse(localStorage.getItem(`achievements_${currentUser}`)) || [];
+    }
+    function renderAchievements() {
+        achievementsGrid.innerHTML = '';
+        const unlocked = getAchievements();
+        for (const id in ACHIEVEMENTS) {
+            const ach = ACHIEVEMENTS[id];
+            const isUnlocked = unlocked.includes(id);
+            const badge = document.createElement('div');
+            badge.classList.add('achievement-badge', 'p-2');
+            if(isUnlocked) badge.classList.add('unlocked');
+            badge.title = `${ach.title}${isUnlocked ? ' - Unlocked!' : ' - Locked'}`;
+            badge.innerHTML = `<i class="ph-fill ph-${ach.icon} text-5xl text-green-500"></i><p class="text-xs mt-1 font-semibold">${ach.title}</p>`;
+            achievementsGrid.appendChild(badge);
+        }
+    }
+    function checkAndAwardAchievements() {
+        const history = getHistory();
+        const stats = {
+            totalEntries: history.length,
+            totalSavedKWh: history.reduce((sum, item) => sum + item.savedKWh, 0),
+            streak: calculateStreak(history) // Assuming a function to calculate this
+        };
+
+        let unlocked = getAchievements();
+        let newAchievement = false;
+        for (const id in ACHIEVEMENTS) {
+            if (!unlocked.includes(id) && ACHIEVEMENTS[id].condition(stats)) {
+                unlocked.push(id);
+                newAchievement = true;
+                showModalAlert("Achievement Unlocked!", `You've earned the "${ACHIEVEMENTS[id].title}" badge!`);
+            }
+        }
+
+        if(newAchievement) {
+            localStorage.setItem(`achievements_${currentUser}`, JSON.stringify(unlocked));
+            renderAchievements();
+        }
+    }
+    
+    function calculateStreak(history) {
+        if (history.length < 2) return history.length;
+        let streak = 1;
+        let lastDate = new Date(history[0].date);
+        lastDate.setHours(0,0,0,0);
+        
+        for (let i = 1; i < history.length; i++) {
+            let currentDate = new Date(history[i].date);
+            currentDate.setHours(0,0,0,0);
+            
+            let expectedPreviousDate = new Date(lastDate);
+            expectedPreviousDate.setDate(lastDate.getDate() - 1);
+            
+            if (currentDate.getTime() === expectedPreviousDate.getTime()) {
+                streak++;
+                lastDate = currentDate;
+            } else {
+                break; // Streak broken
+            }
+        }
+        return streak;
+    }
+
+    // --- UTILITY & MISC ---
     function displayRandomEcoTip() {
-        const randomIndex = Math.floor(Math.random() * ECO_TIPS.length);
-        ecoTipEl.textContent = ECO_TIPS[randomIndex];
+        ecoTipEl.textContent = ECO_TIPS[Math.floor(Math.random() * ECO_TIPS.length)];
+    }
+    
+    function handleDownloadReport() {
+        if (currentUser === 'Guest') {
+            showModalAlert("Feature Unavailable", "Please log in to a department to download reports.");
+            return;
+        }
+        const weeklyData = getWeeklyData().data;
+        const totalSaved = getHistory().reduce((sum, item) => sum + item.savedKWh, 0);
+        let report = `EcoTrack Energy Report for: ${currentUser}\n`;
+        report += `Date: ${new Date().toLocaleDateString()}\n\n`;
+        report += `--- Weekly Usage (kWh) ---\n`;
+        report += `Mon: ${weeklyData[0]}\nTue: ${weeklyData[1]}\nWed: ${weeklyData[2]}\nThu: ${weeklyData[3]}\nFri: ${weeklyData[4]}\nSat: ${weeklyData[5]}\nSun: ${weeklyData[6]}\n\n`;
+        report += `--- Lifetime Stats ---\n`;
+        report += `Total Energy Saved: ${totalSaved.toFixed(2)} kWh\n`;
+        report += `Total Money Saved: ₹${(totalSaved * COST_PER_KWH).toFixed(2)}\n`;
+        report += `Total CO₂ Reduced: ${(totalSaved * CO2_PER_KWH).toFixed(2)} kg\n`;
+
+        const blob = new Blob([report], { type: 'text/plain' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `EcoTrack_Report_${currentUser}.txt`;
+        link.click();
+        URL.revokeObjectURL(link.href);
+    }
+    
+    function showMoreTips() {
+        let tipsHtml = '<ul class="list-disc list-inside space-y-2">';
+        ECO_TIPS.forEach(tip => {
+            tipsHtml += `<li>${tip}</li>`;
+        });
+        tipsHtml += '</ul>';
+        showModalAlert("Energy Saving Tips", tipsHtml, false);
+    }
+
+    // --- MODAL CONTROLS ---
+    function openModal() { modal.classList.add('visible'); }
+    function closeModal() { modal.classList.remove('visible'); }
+
+    function showModalAlert(title, bodyHtml, hideConfirm = true) {
+        modalTitle.textContent = title;
+        modalBody.innerHTML = bodyHtml;
+        modalConfirmBtn.classList.toggle('hidden', hideConfirm);
+        openModal();
+    }
+    
+    function showModalConfirm(title, bodyText, onConfirm) {
+        showModalAlert(title, `<p>${bodyText}</p>`, false);
+        modalConfirmBtn.onclick = () => {
+            onConfirm();
+            closeModal();
+        };
     }
 
     // --- CHART LOGIC ---
     function renderChart() {
         const ctx = document.getElementById('energy-chart').getContext('2d');
         const weeklyData = getWeeklyData();
+        const goal = getGoal();
+        
+        if (energyChart) {
+            energyChart.destroy();
+        }
+
+        const datasets = [{
+            label: 'Energy Usage (kWh)',
+            data: weeklyData.data,
+            backgroundColor: 'rgba(34, 197, 94, 0.6)',
+            borderColor: 'rgba(22, 163, 74, 1)',
+            borderWidth: 1,
+            borderRadius: 5,
+            order: 2,
+        }];
+        
+        if (goal > 0) {
+            datasets.push({
+                label: 'Weekly Goal Progress',
+                data: weeklyData.data.map((_, i) => (goal / 7) * (i + 1)), // Distribute goal linearly
+                type: 'line',
+                borderColor: 'rgba(79, 70, 229, 0.8)',
+                backgroundColor: 'transparent',
+                borderWidth: 2,
+                pointRadius: 3,
+                pointBackgroundColor: 'rgba(79, 70, 229, 1)',
+                tension: 0.1,
+                order: 1,
+            });
+        }
         
         energyChart = new Chart(ctx, {
             type: 'bar',
             data: {
                 labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                datasets: [{
-                    label: 'Energy Usage (kWh)',
-                    data: weeklyData.data,
-                    backgroundColor: 'rgba(34, 197, 94, 0.6)',
-                    borderColor: 'rgba(22, 163, 74, 1)',
-                    borderWidth: 1,
-                    borderRadius: 5,
-                }]
+                datasets: datasets
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                scales: {
-                    y: { beginAtZero: true, grid: { color: '#e5e7eb' } },
-                    x: { grid: { display: false } }
-                },
-                plugins: { legend: { display: false } }
+                scales: { y: { beginAtZero: true, grid: { color: '#e5e7eb' } }, x: { grid: { display: false } } },
+                plugins: { legend: { display: true, position: 'top' } }
             }
         });
     }
@@ -516,7 +783,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function getWeeklyData() {
         let data = JSON.parse(localStorage.getItem(`weeklyEnergyData_${currentUser}`));
         if (!data || !Array.isArray(data) || data.length !== 7) {
-            return { data: [15, 18, 16, 20, 17, 22, 19] };
+            return { data: [0, 0, 0, 0, 0, 0, 0] }; // Start with a clean slate
         }
         return { data };
     }
@@ -524,14 +791,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateChart(todayUsage) {
         const dayOfWeek = new Date().getDay();
         const chartIndex = (dayOfWeek === 0) ? 6 : dayOfWeek - 1;
-
         let weeklyData = getWeeklyData().data;
         weeklyData[chartIndex] = todayUsage;
-        
         localStorage.setItem(`weeklyEnergyData_${currentUser}`, JSON.stringify(weeklyData));
-        
-        energyChart.data.datasets[0].data = weeklyData;
-        energyChart.update();
+        renderChart(); // Use full render to update goal line correctly
     }
 
     // --- KICKSTART THE APP ---
@@ -540,3 +803,4 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+
